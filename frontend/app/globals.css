@@ -26,3 +26,9 @@ body {
     scrollbar-width: none;
   }
 }
+
+/* Hide the invisible reCAPTCHA badge that causes a white square */
+.grecaptcha-badge { 
+  visibility: hidden !important;
+  display: none !important;
+}
