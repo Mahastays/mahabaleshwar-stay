@@ -132,7 +132,6 @@ export default function LoginPage() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-12 text-white">
-          <img src="/logo.png" alt="MahaStays Logo" className="h-48 w-auto mb-4 scale-150 origin-left object-contain object-left filter brightness-0 invert" />
           <p className="text-lg opacity-90 max-w-md leading-relaxed">
             Experience the serene beauty of Mahabaleshwar. Book premium resorts, cozy homestays, and luxurious villas.
           </p>
