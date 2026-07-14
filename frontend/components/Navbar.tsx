@@ -34,7 +34,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center w-1/3">
             <Link href="/">
-              <img src="/logo.png" alt="MahaStays Logo" className="h-32 w-auto scale-150 origin-left cursor-pointer" />
+              <img src="/logo.png" alt="MahaStays Logo" className="h-8 md:h-12 w-auto object-contain cursor-pointer" />
             </Link>
           </div>
 
@@ -139,17 +139,17 @@ export default function Navbar() {
         </div>
 
         {/* Search Pill Row */}
-        <div className="flex justify-center">
-            <form action="/search" className="max-w-[850px] w-full flex items-center bg-white border border-gray-300 rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 pl-2 pr-2 py-2">
-              <div className="flex-[1.5] flex flex-col px-8 border-r border-gray-300 hover:bg-gray-100 rounded-full cursor-pointer transition py-1">
+        <div className="flex justify-center mt-2 md:mt-0">
+            <form action="/search" className="max-w-[850px] w-full flex flex-col md:flex-row items-center bg-white border border-gray-300 rounded-3xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 p-2 md:p-2 gap-2 md:gap-0">
+              <div className="w-full md:flex-[1.5] flex flex-col px-4 md:px-8 border-b md:border-b-0 md:border-r border-gray-200 md:border-gray-300 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
                 <label htmlFor="query" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">Where</label>
                 <input type="text" id="query" name="query" placeholder="Search destinations" className="text-[14px] text-gray-900 placeholder-gray-500 truncate outline-none bg-transparent w-full" />
               </div>
-              <div className="flex-1 flex flex-col px-8 border-r border-gray-300 hover:bg-gray-100 rounded-full cursor-pointer transition py-1">
+              <div className="w-full md:flex-1 flex flex-col px-4 md:px-8 border-b md:border-b-0 md:border-r border-gray-200 md:border-gray-300 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
                 <label htmlFor="checkin" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">When</label>
                 <input type="date" min={new Date().toISOString().split('T')[0]} id="checkin" name="checkin" className="text-[14px] text-gray-900 placeholder-gray-500 truncate outline-none bg-transparent cursor-pointer w-full" />
               </div>
-              <div className="flex-[1.5] flex items-center justify-between pl-8 pr-2 hover:bg-gray-100 rounded-full cursor-pointer transition py-1">
+              <div className="w-full md:flex-[1.5] flex items-center justify-between px-4 md:pl-8 md:pr-2 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
                 <div className="flex flex-col flex-1">
                   <label htmlFor="guests" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">Who</label>
                   <select id="guests" name="guests" className="text-[14px] text-gray-900 placeholder-gray-500 truncate outline-none bg-transparent cursor-pointer w-full">
@@ -160,7 +160,7 @@ export default function Navbar() {
                     <option value="4+">4+ guests</option>
                   </select>
                 </div>
-                <button type="submit" className="bg-brand-red text-white rounded-full p-4 hover:bg-brand-red transition-colors cursor-pointer flex-shrink-0 ml-4">
+                <button type="submit" className="bg-brand-red text-white rounded-full p-3 md:p-4 hover:bg-red-600 transition-colors cursor-pointer flex-shrink-0 ml-4">
                   <Search size={20} strokeWidth={3} />
                 </button>
               </div>
