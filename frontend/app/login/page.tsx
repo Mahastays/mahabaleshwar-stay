@@ -31,16 +31,16 @@ export default function LoginPage() {
 
   // If already logged in, redirect based on role
   useEffect(() => {
-    if (user) {
-      if (user.role === 'admin') {
-        router.push('/admin');
-      } else if (user.role === 'host') {
-        router.push('/vendor');
-      } else {
-        router.push('/');
-      }
+    if (user && !authLoading) {
+      if (user.role === 'admin') router.push('/admin');
+      else if (user.role === 'host') router.push('/vendor');
+      else router.push('/');
+    } else if (!user && !authLoading && loading) {
+      // If auth finished loading but user is still null, it means backend sync failed
+      setLoading(false);
+      setError('Login failed to sync with the server. Please check your connection.');
     }
-  }, [user, router]);
+  }, [user, authLoading, router, loading]);
 
   if (user) {
     return null;
