@@ -142,8 +142,12 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12">
         <div className="w-full max-w-md bg-white p-10 shadow-2xl shadow-brand-brown/5 rounded-3xl border border-white/50 backdrop-blur-sm">
           <div className="text-center mb-8">
-            <div className="lg:hidden mb-6 flex justify-center">
-              <img src="/logo.png" alt="MahaStays Logo" className="h-40 w-auto scale-150" />
+            <div className="lg:hidden mb-10 flex justify-center">
+              <img 
+                src="/logo_cropped.png" 
+                alt="MahaStays Logo" 
+                className="h-16 w-auto object-contain" 
+              />
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">Welcome back</h2>
             <p className="text-gray-500">Sign in to access your dashboard</p>

@@ -2,31 +2,33 @@ const path = require('path');
 const express = require('express');
 const multer = require('multer');
 const { bucket } = require('../config/firebase');
+const { protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // Use memory storage so we don't save to local disk
 const storage = multer.memoryStorage();
 
 function checkFileType(file, cb) {
-  const filetypes = /jpg|jpeg|png|webp|gif|svg/;
+  const filetypes = /jpg|jpeg|png|webp|gif/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
   if (extname && mimetype) {
     return cb(null, true);
   } else {
-    cb(new Error('Images only! We only support JPG, JPEG, PNG, WEBP, GIF, and SVG.'));
+    cb(new Error('Images only! We only support JPG, JPEG, PNG, WEBP, and GIF. (SVG is not allowed)'));
   }
 }
 
 const upload = multer({
   storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
 });
 
-router.post('/', (req, res) => {
+router.post('/', protect, (req, res) => {
   upload.single('image')(req, res, async function (err) {
     if (err) {
       return res.status(400).send(err.message);

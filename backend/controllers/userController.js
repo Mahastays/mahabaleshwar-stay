@@ -53,6 +53,15 @@ const authFirebaseUser = async (req, res) => {
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = async (req, res) => {
+  if (req.user.role === 'admin') {
+    return res.json({
+      _id: req.user._id,
+      name: req.user.name || 'Super Admin',
+      email: req.user.email || 'admin@mahastays.com',
+      role: 'admin',
+    });
+  }
+
   const user = await User.findById(req.user._id);
 
   if (user) {
@@ -107,28 +116,6 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// @desc    Upgrade user to host
-// @route   PUT /api/users/upgrade-to-host
-// @access  Private
-const upgradeToHost = async (req, res) => {
-  const user = await User.findById(req.user._id);
-
-  if (user) {
-    user.role = 'host';
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      phoneNumber: updatedUser.phoneNumber,
-      role: updatedUser.role,
-      firebaseUid: updatedUser.firebaseUid,
-    });
-  } else {
-    res.status(404).json({ message: 'User not found' });
-  }
-};
 
 // @desc    Admin: Update a user's role
 // @route   PUT /api/users/admin/:id/role
@@ -181,7 +168,6 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   getAllUsers,
-  upgradeToHost,
   adminUpdateUserRole,
   adminDeleteUser,
 };

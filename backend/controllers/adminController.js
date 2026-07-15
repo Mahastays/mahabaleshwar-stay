@@ -7,8 +7,8 @@ const loginAdmin = async (req, res) => {
   const { username, password } = req.body;
 
   // Retrieve credentials from .env, or use fallback
-  const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  const adminUsername = process.env.ADMIN_USERNAME;
+  const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (username === adminUsername && password === adminPassword) {
     res.json({
@@ -25,7 +25,10 @@ const loginAdmin = async (req, res) => {
 
 // Generate JWT
 const generateToken = (id) => {
-  return jwt.sign({ id, role: 'admin' }, process.env.JWT_SECRET || 'fallback_secret', {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('FATAL: JWT_SECRET environment variable is missing.');
+  }
+  return jwt.sign({ id, role: 'admin' }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
 };

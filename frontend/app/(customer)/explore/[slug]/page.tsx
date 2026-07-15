@@ -34,7 +34,7 @@ interface Property {
 async function fetchPlace(slug: string): Promise<ExplorePlace | null> {
   try {
     const res = await fetch(`http://localhost:5000/api/explore/${slug}`, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
     if (!res.ok) return null;
     return await res.json();
@@ -46,7 +46,7 @@ async function fetchPlace(slug: string): Promise<ExplorePlace | null> {
 async function fetchNearbyProperties(): Promise<Property[]> {
   try {
     const res = await fetch('http://localhost:5000/api/properties', {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
     if (!res.ok) return [];
     const data = await res.json();

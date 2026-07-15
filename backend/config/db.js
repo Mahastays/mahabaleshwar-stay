@@ -11,7 +11,7 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.log(`MongoDB Connection Error (Check IP Whitelist!): ${error.message}`);
-    // Do not process.exit(1) so the server stays up and we avoid Axios Network Errors on frontend
+    process.exit(1);
   }
 };
 

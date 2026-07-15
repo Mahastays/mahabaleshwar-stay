@@ -16,7 +16,7 @@ interface PropertyDetail {
 
 async function fetchProperty(id: string): Promise<PropertyDetail | null> {
   try {
-    const res = await fetch(`http://localhost:5000/api/properties/${id}`, { cache: 'no-store' });
+    const res = await fetch(`http://localhost:5000/api/properties/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return await res.json();
   } catch (error) {

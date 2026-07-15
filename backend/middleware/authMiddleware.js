@@ -1,5 +1,6 @@
 const { admin } = require('../config/firebase');
 const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
 
 const protect = async (req, res, next) => {
   let token;
@@ -8,6 +9,24 @@ const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
       
+      try {
+        // Try to decode as standard JWT for admin
+        if (!process.env.JWT_SECRET) {
+          throw new Error('FATAL: JWT_SECRET environment variable is missing.');
+        }
+        const decodedJwt = jwt.verify(token, process.env.JWT_SECRET);
+        if (decodedJwt && decodedJwt.role === 'admin') {
+          req.user = {
+            _id: decodedJwt.id,
+            role: 'admin',
+            isAdmin: true,
+          };
+          return next();
+        }
+      } catch (jwtError) {
+        // Not a standard JWT, proceed to Firebase verification
+      }
+
       // Strict Firebase Token Verification
       const decodedToken = await admin.auth().verifyIdToken(token);
       const user = await User.findOne({ firebaseUid: decodedToken.uid });

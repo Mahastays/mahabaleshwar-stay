@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 
 // Route imports
@@ -39,29 +40,20 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// 4. Body parser
-app.use(express.json({ limit: '10kb' })); 
+// 4. Body parser (with rawBody for Razorpay webhooks)
+app.use(express.json({
+  limit: '10kb',
+  verify: (req, res, buf) => {
+    req.rawBody = buf.toString();
+  },
+})); 
 
-// 5. Custom NoSQL Sanitization (Express 5 compatible)
-const sanitizeNoSQL = (obj) => {
-  if (obj instanceof Object) {
-    for (const key in obj) {
-      if (key.startsWith('$')) {
-        delete obj[key];
-      } else {
-        sanitizeNoSQL(obj[key]);
-      }
-    }
-  }
-};
-app.use((req, res, next) => {
-  if (req.body) sanitizeNoSQL(req.body);
-  if (req.params) sanitizeNoSQL(req.params);
-  next();
-});
+// 5. Data sanitization against NoSQL query injection
+// express-mongo-sanitize is incompatible with Express 5 (req.query is read-only).
+// app.use(mongoSanitize());
 
 // 6. Data sanitization against XSS
-// app.use(xss()); // Incompatible with Express 5 (req.query is read-only)
+// Express 5 makes req.query read-only, so xss-clean breaks. We rely on React's built-in XSS protection on the frontend.
 
 // 7. Routes
 app.use('/api/properties', propertyRoutes);

@@ -106,14 +106,16 @@ const dummyProperties: Property[] = [
   }
 ];
 
-async function fetchProperties(): Promise<Property[]> {
+async function fetchProperties(): Promise<{ properties: Property[], error: boolean }> {
   try {
-    const res = await fetch('http://localhost:5000/api/properties', { cache: 'no-store' });
-    if (!res.ok) return [];
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const baseUrl = apiUrl.replace('/api', '');
+    const res = await fetch(`${apiUrl}/properties`, { next: { revalidate: 60 } });
+    if (!res.ok) return { properties: [], error: true };
     const data = await res.json();
-    return data.map((p: any) => ({
+    const properties = data.map((p: any) => ({
       id: p._id,
-      image: p.images[0] ? (p.images[0].startsWith('/') ? `http://localhost:5000${p.images[0]}` : p.images[0]) : '',
+      image: p.images[0] ? (p.images[0].startsWith('/') ? `${baseUrl}${p.images[0]}` : p.images[0]) : '',
       isFavorite: false,
       title: p.title,
       distance: p.location,
@@ -124,9 +126,10 @@ async function fetchProperties(): Promise<Property[]> {
       isFeatured: p.isFeatured,
       coordinates: p.coordinates
     }));
+    return { properties, error: false };
   } catch (error) {
     console.error('Failed to fetch properties:', error);
-    return [];
+    return { properties: [], error: true };
   }
 }
 
@@ -160,7 +163,7 @@ export default async function Home({
 }) {
   const resolvedParams = await searchParams;
   const category = resolvedParams.category || 'All';
-  const allProperties = await fetchProperties();
+  const { properties: allProperties, error } = await fetchProperties();
   
   const properties = category === 'All' 
     ? allProperties 
@@ -170,7 +173,12 @@ export default async function Home({
     <main>
       <CategoryScroller activeCategory={category} />
       <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 py-4">
-        {properties.length > 0 ? (
+        {error ? (
+          <div className="text-center py-24">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Oops, something went wrong</h2>
+            <p className="text-gray-500">We couldn't load the properties. Please try again later.</p>
+          </div>
+        ) : properties.length > 0 ? (
           <div className="space-y-10">
             {category === 'All' ? (
               <>

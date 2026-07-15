@@ -47,18 +47,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const syncAdminWithBackend = async () => {
+    try {
+      const res = await api.get('/users/profile');
+      setUser(res.data);
+    } catch (error) {
+      console.error('Failed to sync admin with backend', error);
+      localStorage.removeItem('adminToken');
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
+    const initAuth = async () => {
+      const adminToken = localStorage.getItem('adminToken');
+      if (adminToken) {
+        await syncAdminWithBackend();
+        setLoading(false);
+      }
+    };
+    initAuth();
+
     const unsubscribe = onAuthStateChanged(auth, async (currentFirebaseUser) => {
       setFirebaseUser(currentFirebaseUser);
       if (currentFirebaseUser) {
         const token = await currentFirebaseUser.getIdToken();
         localStorage.setItem('token', token);
         await syncUserWithBackend(token);
+        setLoading(false);
       } else {
-        setUser(null);
-        localStorage.removeItem('token');
+        if (!localStorage.getItem('adminToken')) {
+          setUser(null);
+          localStorage.removeItem('token');
+          setLoading(false);
+        }
       }
-      setLoading(false);
     });
 
     return () => unsubscribe && unsubscribe();

@@ -22,7 +22,8 @@ interface PropertyDetail {
 
 async function fetchProperty(id: string): Promise<PropertyDetail | null> {
   try {
-    const res = await fetch(`http://localhost:5000/api/properties/${id}`, { cache: 'no-store' });
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const res = await fetch(`${apiUrl}/properties/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return await res.json();
   } catch (error) {
@@ -59,8 +60,9 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
     );
   }
 
+  const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace('/api', '');
   const galleryImages = property.images.length > 0
-    ? [...property.images.map(img => img.startsWith('/') ? `http://localhost:5000${img}` : img), ...fallbackImages].slice(0, 5)
+    ? [...property.images.map(img => img.startsWith('/') ? `${baseUrl}${img}` : img), ...fallbackImages].slice(0, 5)
     : fallbackImages;
 
   return (

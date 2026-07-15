@@ -32,10 +32,12 @@ const propertySchema = mongoose.Schema(
     type: {
       type: String,
       required: [true, 'Please add a property type (e.g., Resort, Homestay)'],
+      index: true,
     },
     location: {
       type: String,
       required: [true, 'Please add a location'],
+      index: true,
     },
     coordinates: {
       lat: {
@@ -47,15 +49,28 @@ const propertySchema = mongoose.Schema(
         required: false,
       }
     },
+    locationPoint: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point',
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        required: false,
+      }
+    },
     host: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
+      index: true,
     },
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected'],
       default: 'pending',
+      index: true,
     },
     isFeatured: {
       type: Boolean,
@@ -66,5 +81,7 @@ const propertySchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+propertySchema.index({ locationPoint: '2dsphere' });
 
 module.exports = mongoose.model('Property', propertySchema);

@@ -6,11 +6,13 @@ const bookingSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
+      index: true,
     },
     property: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Property',
+      index: true,
     },
     checkInDate: {
       type: Date,
@@ -53,7 +55,7 @@ const bookingSchema = mongoose.Schema(
     },
     // Payment tracking fields
     paymentId: { type: String },
-    orderId: { type: String },
+    orderId: { type: String, unique: true, sparse: true },
     isPaid: { type: Boolean, default: false },
     paidAt: { type: Date },
   },

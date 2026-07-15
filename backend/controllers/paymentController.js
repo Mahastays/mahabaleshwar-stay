@@ -1,5 +1,6 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const Booking = require('../models/bookingModel');
 const Property = require('../models/propertyModel');
 
@@ -29,9 +30,9 @@ const createOrder = async (req, res) => {
     const diffTime = Math.abs(end - start);
     const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
 
-    // Hardcoded fees
-    const cleaningFee = 1500;
-    const serviceFee = 3800;
+    // Configurable fees via environment variables
+    const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
+    const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
     const subtotal = property.price * nights;
     const calculatedTotal = subtotal + cleaningFee + serviceFee;
 
@@ -90,50 +91,67 @@ const verifyPaymentAndBook = async (req, res) => {
   }
 
   try {
-    // Check if booking already exists (from webhook)
-    let booking = await Booking.findOne({ orderId: razorpay_order_id });
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      // Check if booking already exists (from webhook)
+      let booking = await Booking.findOne({ orderId: razorpay_order_id }).session(session);
 
-    if (!booking) {
-      // Fallback: Webhook didn't fire yet, create it here
-      const property = await Property.findById(propertyId);
-      if (!property) return res.status(404).json({ message: 'Property not found' });
+      if (!booking) {
+        // Fallback: Webhook didn't fire yet, create it here
+        const property = await Property.findById(propertyId).session(session);
+        if (!property) {
+          await session.abortTransaction();
+          session.endSession();
+          return res.status(404).json({ message: 'Property not found' });
+        }
 
-      const start = new Date(checkInDate);
-      const end = new Date(checkOutDate);
-      const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
-      
-      const cleaningFee = 1500;
-      const serviceFee = 3800;
-      const vendorCommissionRate = 0.15;
-      const subtotal = property.price * nights;
-      const calculatedTotal = subtotal + cleaningFee + serviceFee;
+        const start = new Date(checkInDate);
+        const end = new Date(checkOutDate);
+        const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
+        
+        const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
+        const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
+        const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
+        const subtotal = property.price * nights;
+        const calculatedTotal = subtotal + cleaningFee + serviceFee;
 
-      booking = await Booking.create({
-        user: req.user._id,
-        property: propertyId,
-        checkInDate,
-        checkOutDate,
-        guests: parseInt(guests) || 1,
-        totalPrice: calculatedTotal,
-        subtotal,
-        serviceFee,
-        cleaningFee,
-        platformCommission: subtotal * vendorCommissionRate,
-        vendorPayout: subtotal - (subtotal * vendorCommissionRate) + cleaningFee,
-        adminRevenue: (subtotal * vendorCommissionRate) + serviceFee,
-        status: 'confirmed',
+        const newBooking = new Booking({
+          user: req.user._id,
+          property: propertyId,
+          checkInDate,
+          checkOutDate,
+          guests: parseInt(guests) || 1,
+          totalPrice: calculatedTotal,
+          subtotal,
+          serviceFee,
+          cleaningFee,
+          platformCommission: subtotal * vendorCommissionRate,
+          vendorPayout: subtotal - (subtotal * vendorCommissionRate) + cleaningFee,
+          adminRevenue: (subtotal * vendorCommissionRate) + serviceFee,
+          status: 'confirmed',
+          paymentId: razorpay_payment_id,
+          orderId: razorpay_order_id,
+          isPaid: true,
+          paidAt: new Date(),
+        });
+        
+        booking = await newBooking.save({ session });
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+
+      res.status(201).json({
+        success: true,
+        bookingId: booking._id,
         paymentId: razorpay_payment_id,
-        orderId: razorpay_order_id,
-        isPaid: true,
-        paidAt: new Date(),
       });
+    } catch (txError) {
+      await session.abortTransaction();
+      session.endSession();
+      throw txError;
     }
-
-    res.status(201).json({
-      success: true,
-      bookingId: booking._id,
-      paymentId: razorpay_payment_id,
-    });
   } catch (error) {
     console.error('Booking creation error:', error);
     res.status(500).json({ message: 'Server Error' });
@@ -153,7 +171,7 @@ const handleWebhook = async (req, res) => {
     // Verify signature using crypto
     const expectedSignature = crypto
       .createHmac('sha256', secret)
-      .update(JSON.stringify(req.body))
+      .update(req.rawBody)
       .digest('hex');
 
     if (expectedSignature !== signature) {
@@ -167,40 +185,52 @@ const handleWebhook = async (req, res) => {
       const notes = paymentData.notes;
 
       if (notes && notes.platform === 'Mahastays') {
-        const existingBooking = await Booking.findOne({ orderId: paymentData.order_id });
-        
-        if (!existingBooking) {
-          const property = await Property.findById(notes.propertyId);
-          if (property) {
-            const start = new Date(notes.checkInDate);
-            const end = new Date(notes.checkOutDate);
-            const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
-            
-            const cleaningFee = 1500;
-            const serviceFee = 3800;
-            const vendorCommissionRate = 0.15;
-            const subtotal = property.price * nights;
-            
-            await Booking.create({
-              user: notes.user,
-              property: notes.propertyId,
-              checkInDate: notes.checkInDate,
-              checkOutDate: notes.checkOutDate,
-              guests: parseInt(notes.guests) || 1,
-              totalPrice: (paymentData.amount / 100),
-              subtotal,
-              serviceFee,
-              cleaningFee,
-              platformCommission: subtotal * vendorCommissionRate,
-              vendorPayout: subtotal - (subtotal * vendorCommissionRate) + cleaningFee,
-              adminRevenue: (subtotal * vendorCommissionRate) + serviceFee,
-              status: 'confirmed',
-              paymentId: paymentData.id,
-              orderId: paymentData.order_id,
-              isPaid: true,
-              paidAt: new Date(),
-            });
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        try {
+          const existingBooking = await Booking.findOne({ orderId: paymentData.order_id }).session(session);
+          
+          if (!existingBooking) {
+            const property = await Property.findById(notes.propertyId).session(session);
+            if (property) {
+              const start = new Date(notes.checkInDate);
+              const end = new Date(notes.checkOutDate);
+              const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
+              
+              const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
+              const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
+              const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
+              const subtotal = property.price * nights;
+              
+              const newBooking = new Booking({
+                user: notes.user,
+                property: notes.propertyId,
+                checkInDate: notes.checkInDate,
+                checkOutDate: notes.checkOutDate,
+                guests: parseInt(notes.guests) || 1,
+                totalPrice: (paymentData.amount / 100),
+                subtotal,
+                serviceFee,
+                cleaningFee,
+                platformCommission: subtotal * vendorCommissionRate,
+                vendorPayout: subtotal - (subtotal * vendorCommissionRate) + cleaningFee,
+                adminRevenue: (subtotal * vendorCommissionRate) + serviceFee,
+                status: 'confirmed',
+                paymentId: paymentData.id,
+                orderId: paymentData.order_id,
+                isPaid: true,
+                paidAt: new Date(),
+              });
+              
+              await newBooking.save({ session });
+            }
           }
+          await session.commitTransaction();
+          session.endSession();
+        } catch (txError) {
+          await session.abortTransaction();
+          session.endSession();
+          throw txError;
         }
       }
     }

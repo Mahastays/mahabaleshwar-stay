@@ -6,11 +6,48 @@ const Property = require('../models/propertyModel');
 // @access  Private
 const createBooking = async (req, res) => {
   try {
-    const { property, checkInDate, checkOutDate, guests, totalPrice } = req.body;
+    const { property, checkInDate, checkOutDate, guests } = req.body;
 
-    if (!property || !checkInDate || !checkOutDate || !guests || !totalPrice) {
+    if (!property || !checkInDate || !checkOutDate || !guests) {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
+
+    const propertyObj = await Property.findById(property);
+    if (!propertyObj) {
+      return res.status(404).json({ message: 'Property not found' });
+    }
+
+    const start = new Date(checkInDate);
+    const end = new Date(checkOutDate);
+    const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
+
+    // Check for overlapping bookings
+    const overlapping = await Booking.findOne({
+      property: property,
+      status: { $ne: 'cancelled' },
+      $or: [
+        { checkInDate: { $lt: end }, checkOutDate: { $gt: start } }
+      ]
+    });
+
+    if (overlapping) {
+      return res.status(400).json({ message: 'Property is already booked for these dates' });
+    }
+
+    // Acquire Optimistic Lock on the Property document
+    const lockResult = await Property.updateOne(
+      { _id: property, __v: propertyObj.__v },
+      { $inc: { __v: 1 } }
+    );
+
+    if (lockResult.modifiedCount === 0) {
+      return res.status(409).json({ message: 'Concurrent booking detected. Please try again.' });
+    }
+
+    const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
+    const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
+    const subtotal = propertyObj.price * nights;
+    const calculatedTotal = subtotal + cleaningFee + serviceFee;
 
     const booking = new Booking({
       user: req.user._id,
@@ -18,7 +55,10 @@ const createBooking = async (req, res) => {
       checkInDate,
       checkOutDate,
       guests,
-      totalPrice,
+      totalPrice: calculatedTotal,
+      subtotal,
+      cleaningFee,
+      serviceFee,
     });
 
     const createdBooking = await booking.save();

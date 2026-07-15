@@ -13,7 +13,7 @@ interface Property {
 
 async function searchProperties(query: string): Promise<Property[]> {
   try {
-    const res = await fetch('http://localhost:5000/api/properties', { cache: 'no-store' });
+    const res = await fetch('http://localhost:5000/api/properties', { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const data = await res.json();
     

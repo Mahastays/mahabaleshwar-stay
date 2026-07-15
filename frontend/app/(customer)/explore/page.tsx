@@ -23,7 +23,7 @@ interface ExplorePlace {
 
 async function fetchPlaces(): Promise<ExplorePlace[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/explore`, { cache: 'no-store' });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/explore`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {

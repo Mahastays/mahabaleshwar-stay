@@ -2,6 +2,7 @@
 
 import { Heart, Star } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTransition, useMemo } from 'react';
 import { toggleFavoriteProperty } from '@/lib/actions';
 import { useGeolocation } from '@/hooks/useGeolocation';
@@ -47,10 +48,12 @@ export default function PropertyCard({ id, image, isFavorite, title, distance, d
     <Link href={`/properties/${id}`} className="group cursor-pointer flex flex-col gap-3">
       {/* Image Container */}
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-200">
-        <img 
+        <Image 
           src={image} 
           alt={title} 
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         
         {/* Badges and Icons */}

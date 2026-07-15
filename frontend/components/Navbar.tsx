@@ -30,16 +30,20 @@ export default function Navbar() {
     <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm pt-4 pb-6">
       <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
         {/* Top Row */}
-        <div className="flex justify-between items-center mb-6 h-12">
+        <div className="flex justify-between items-center mb-6 min-h-[64px] md:min-h-[80px]">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center w-1/3">
-            <Link href="/">
-              <img src="/logo.png" alt="MahaStays Logo" className="h-8 md:h-12 w-auto object-contain cursor-pointer" />
+          <div className="flex-shrink-0 flex-1 flex items-center">
+            <Link href="/" className="flex items-center">
+              <img 
+                src="/logo_cropped.png" 
+                alt="MahaStays Logo" 
+                className="h-10 md:h-14 w-auto object-contain cursor-pointer" 
+              />
             </Link>
           </div>
 
           {/* Toggles */}
-          <div className="hidden md:flex items-center justify-center space-x-6 w-1/3">
+          <div className="hidden md:flex flex-1 items-center justify-center space-x-6">
             <Link href="/" className={`flex items-center space-x-2 cursor-pointer transition ${pathname === '/' ? 'text-gray-900 font-semibold border-b-[3px] border-gray-900 pb-1' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full px-4 py-2 font-medium'}`}>
                <span className="text-[16px]">Homes</span>
             </Link>
@@ -52,7 +56,7 @@ export default function Navbar() {
           </div>
 
           {/* Profile Section */}
-          <div className="flex items-center justify-end space-x-2 relative w-1/3" ref={menuRef}>
+          <div className="flex-1 flex items-center justify-end space-x-2 relative" ref={menuRef}>
             {user && (user.role === 'host' || user.role === 'admin') && (
               <Link href="/vendor" className="hidden md:block text-sm font-semibold hover:bg-gray-100 px-4 py-2 rounded-full cursor-pointer transition">
                 Host Dashboard
