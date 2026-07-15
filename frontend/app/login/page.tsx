@@ -14,7 +14,7 @@ declare global {
 }
 
 export default function LoginPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   
   const [phoneNumber, setPhoneNumber] = useState('');
