@@ -54,8 +54,8 @@ export default function LoginPage() {
       await signInWithPopup(auth, provider);
       // AuthContext will handle the backend sync automatically via onAuthStateChanged
     } catch (err: any) {
-      // Ignore user cancellations
-      if (err.code !== 'auth/popup-closed-by-user') {
+      // Ignore user cancellations and cancelled concurrent requests
+      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
         setError(err.message);
       }
       setLoading(false);
