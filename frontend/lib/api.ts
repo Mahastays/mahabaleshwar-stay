@@ -12,6 +12,7 @@ api.interceptors.request.use(
     const adminToken = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null;
     if (adminToken) {
       config.headers['Authorization'] = `Bearer ${adminToken}`;
+      config.headers['x-auth-token'] = `Bearer ${adminToken}`; // Bypass CloudFront stripping
       return config;
     }
 
@@ -21,6 +22,7 @@ api.interceptors.request.use(
       const token = await user.getIdToken();
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
+        config.headers['x-auth-token'] = `Bearer ${token}`; // Bypass CloudFront stripping
       }
     }
     return config;

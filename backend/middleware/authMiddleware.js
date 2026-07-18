@@ -4,10 +4,11 @@ const jwt = require('jsonwebtoken');
 
 const protect = async (req, res, next) => {
   let token;
+  const authHeader = req.headers.authorization || req.headers['x-auth-token'];
 
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  if (authHeader && authHeader.startsWith('Bearer')) {
     try {
-      token = req.headers.authorization.split(' ')[1];
+      token = authHeader.split(' ')[1];
       
       try {
         // Try to decode as standard JWT for admin
