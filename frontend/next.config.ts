@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        // Proxy to backend to bypass browser mixed-content (HTTPS -> HTTP) blocks
+        destination: `${process.env.BACKEND_URL || 'http://localhost:5000/api'}/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
