@@ -93,6 +93,17 @@ export default function Navbar() {
             {/* Dropdown Menu */}
             {menuOpen && (
               <div className="absolute right-0 top-14 bg-white border border-gray-200 rounded-xl shadow-xl w-56 py-2 z-50">
+                <div className="md:hidden border-b border-gray-100 mb-1 pb-1">
+                  <Link href="/" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                    Homes
+                  </Link>
+                  <Link href="/explore" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                    Explore
+                  </Link>
+                  <Link href="/experiences" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                    Experiences
+                  </Link>
+                </div>
                 {user ? (
                   <>
                     <div className="px-4 py-3 border-b border-gray-100">
@@ -111,6 +122,11 @@ export default function Navbar() {
                     {(user.role === 'host' || user.role === 'admin') && (
                       <Link href="/vendor" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                         Host Dashboard
+                      </Link>
+                    )}
+                    {user.role === 'user' && (
+                      <Link href="/become-host" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                        Become a host
                       </Link>
                     )}
                     {user.role === 'admin' && (
@@ -135,6 +151,11 @@ export default function Navbar() {
                     <Link href="/login" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                       Sign up
                     </Link>
+                    <div className="border-t border-gray-100 mt-1 pt-1">
+                      <Link href="/become-host" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                        Host your home
+                      </Link>
+                    </div>
                   </>
                 )}
               </div>
