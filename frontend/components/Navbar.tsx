@@ -27,10 +27,11 @@ export default function Navbar() {
   const initials = user?.name ? user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2) : null;
 
   return (
-    <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm pt-4 pb-6">
-      <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-        {/* Top Row */}
-        <div className="flex justify-between items-center mb-6 min-h-[64px] md:min-h-[80px]">
+    <>
+      <div className="sticky top-0 z-50 bg-white pt-4 pb-2 md:pb-6 border-b border-gray-100 md:border-b-0 shadow-sm md:shadow-none">
+        <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+          {/* Top Row */}
+          <div className="flex justify-between items-center min-h-[64px] md:min-h-[80px]">
           {/* Logo */}
           <div className="flex-shrink-0 flex-1 flex items-center">
             <Link href="/" className="flex items-center">
@@ -162,9 +163,12 @@ export default function Navbar() {
             )}
           </div>
         </div>
+      </div>
 
-        {/* Search Pill Row */}
-        <div className="flex justify-center mt-2 md:mt-0">
+      <div className="bg-white pb-6 pt-4 md:pt-0 border-b border-gray-200 shadow-sm md:sticky md:top-[96px] z-40 relative">
+        <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+          {/* Search Pill Row */}
+          <div className="flex justify-center md:mt-0">
             <form action="/search" className="max-w-[850px] w-full flex flex-col md:flex-row items-center bg-white border border-gray-300 rounded-3xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 p-2 md:p-2 gap-2 md:gap-0">
               <div className="w-full md:flex-[1.5] flex flex-col px-4 md:px-8 border-b md:border-b-0 md:border-r border-gray-200 md:border-gray-300 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
                 <label htmlFor="query" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">Where</label>
@@ -190,8 +194,9 @@ export default function Navbar() {
                 </button>
               </div>
             </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
