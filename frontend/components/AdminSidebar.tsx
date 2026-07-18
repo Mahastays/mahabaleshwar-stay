@@ -3,9 +3,29 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, Home, Settings, LogOut, CheckCircle, Shield, MapPin } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const [pendingCount, setPendingCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchPendingCounts = async () => {
+      try {
+        const [propsRes, vendorsRes] = await Promise.all([
+          api.get('/properties/admin/all'),
+          api.get('/vendors/admin/requests').catch(() => ({ data: [] }))
+        ]);
+        const pendingProps = propsRes.data.filter((p: any) => p.status === 'pending').length;
+        const pendingVendors = vendorsRes.data.filter((v: any) => v.status === 'pending').length;
+        setPendingCount(pendingProps + pendingVendors);
+      } catch (err) {
+        // Ignore silently
+      }
+    };
+    fetchPendingCounts();
+  }, []);
 
   const getLinkClasses = (path: string) => {
     const isActive = pathname === path;
@@ -50,7 +70,9 @@ export default function AdminSidebar() {
             <CheckCircle className="w-5 h-5" />
             <span className="font-medium text-sm">Approvals</span>
           </div>
-          <span className="bg-indigo-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">3</span>
+          {pendingCount > 0 && (
+            <span className="bg-indigo-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">{pendingCount}</span>
+          )}
         </Link>
         <Link href="/admin/explore" className={getLinkClasses('/admin/explore')}>
           <MapPin className="w-5 h-5" />
