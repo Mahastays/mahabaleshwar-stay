@@ -162,10 +162,11 @@ export default function Navbar() {
               </div>
             )}
           </div>
-        </div>
       </div>
+    </div>
+  </div>
 
-      <div className="bg-white pb-6 pt-4 md:pt-0 border-b border-gray-200 shadow-sm z-40 relative">
+  <div className="bg-white pb-6 pt-4 md:pt-0 border-b border-gray-200 shadow-sm z-40 relative">
         <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
           {/* Search Pill Row */}
           <div className="flex justify-center md:mt-0">
