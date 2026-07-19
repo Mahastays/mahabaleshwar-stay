@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { UploadCloud, CheckCircle2, Image as ImageIcon } from "lucide-react";
 import api from "@/lib/api";
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default function AddPropertyForm() {
   const [formData, setFormData] = useState({
@@ -28,25 +30,37 @@ export default function AddPropertyForm() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const fileData = new FormData();
-    fileData.append("image", file);
-
     setUploading(true);
 
     try {
-      const res = await api.post("/upload", fileData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // Create a unique filename
+      const fileName = `uploads/image-${Date.now()}-${file.name}`;
+      const storageRef = ref(storage, fileName);
 
-      const imagePath = res.data; // api returns data directly
-      setImages((prev) => [...prev, imagePath]);
-      setUploading(false);
+      // Upload the file to Firebase Storage
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // You could add a progress bar here if desired
+        },
+        (error) => {
+          console.error(error);
+          setUploading(false);
+          alert(`Error uploading image: ${error.message}`);
+        },
+        async () => {
+          // Handle successful uploads on complete
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          setImages((prev) => [...prev, downloadURL]);
+          setUploading(false);
+        }
+      );
     } catch (error: any) {
       console.error(error);
       setUploading(false);
-      alert(`Error uploading image: ${error.response?.data || error.message || 'Unknown error'}`);
+      alert(`Error initializing upload: ${error.message || 'Unknown error'}`);
     }
   };
 
