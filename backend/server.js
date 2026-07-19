@@ -28,7 +28,7 @@ app.use(helmet());
 
 // 2. Strict CORS policy
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://mahastays.com'], 
+  origin: ['http://localhost:3000', 'https://mahastays.com', 'https://www.mahastays.com'], 
   credentials: true,
 }));
 
