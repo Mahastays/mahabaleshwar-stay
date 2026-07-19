@@ -64,11 +64,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
     setUploading(true);
 
     try {
-      // Use absolute backend URL in production to bypass Vercel's 4.5MB proxy limit
-      const isProd = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
-      const uploadUrl = isProd ? 'https://api.mahastays.com/api/upload' : '/upload';
-      
-      const res = await api.post(uploadUrl, fileData, {
+      const res = await api.post("/upload", fileData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
