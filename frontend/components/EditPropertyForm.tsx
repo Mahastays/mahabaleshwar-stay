@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import { UploadCloud, CheckCircle2, Image as ImageIcon } from "lucide-react";
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { storage } from "@/lib/firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default function EditPropertyForm({ propertyId }: { propertyId: string }) {
   const router = useRouter();
@@ -63,34 +61,36 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
     setUploading(true);
 
     try {
-      // Create a unique filename
-      const fileName = `uploads/image-${Date.now()}-${file.name}`;
-      const storageRef = ref(storage, fileName);
-
-      // Upload the file to Firebase Storage
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // You could add a progress bar here if desired
-        },
-        (error) => {
-          console.error(error);
-          setUploading(false);
-          alert(`Error uploading image: ${error.message}`);
-        },
-        async () => {
-          // Handle successful uploads on complete
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          setImages((prev) => [...prev, downloadURL]);
-          setUploading(false);
+      // 1. Get a Signed URL from the backend
+      const res = await api.get('/upload/url', {
+        params: {
+          filename: file.name,
+          contentType: file.type
         }
-      );
+      });
+      
+      const { uploadUrl, publicUrl } = res.data;
+
+      // 2. Upload the file directly to Google Cloud Storage (Firebase) using the Signed URL
+      const uploadRes = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+
+      if (!uploadRes.ok) {
+        throw new Error('Failed to upload image to the secure link');
+      }
+
+      // 3. Save the public URL
+      setImages((prev) => [...prev, publicUrl]);
+      setUploading(false);
     } catch (error: any) {
       console.error(error);
       setUploading(false);
-      alert(`Error initializing upload: ${error.message || 'Unknown error'}`);
+      alert(`Error uploading image: ${error.message || 'Unknown error'}`);
     }
   };
 

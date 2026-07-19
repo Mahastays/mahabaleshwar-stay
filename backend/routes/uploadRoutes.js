@@ -58,4 +58,33 @@ router.post('/', protect, (req, res) => {
   });
 });
 
+// Generate a Signed URL for secure client-side uploads
+router.get('/url', protect, async (req, res) => {
+  try {
+    const { filename, contentType } = req.query;
+    if (!filename || !contentType) {
+      return res.status(400).send('Filename and contentType are required');
+    }
+
+    const uniqueFilename = `uploads/image-${Date.now()}-${filename}`;
+    const file = bucket.file(uniqueFilename);
+
+    // Generate a write URL that expires in 15 minutes
+    const [url] = await file.getSignedUrl({
+      version: 'v4',
+      action: 'write',
+      expires: Date.now() + 15 * 60 * 1000,
+      contentType: contentType,
+    });
+
+    // Firebase Storage default media URL format for the final public URL
+    const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(uniqueFilename)}?alt=media`;
+
+    res.json({ uploadUrl: url, publicUrl });
+  } catch (error) {
+    console.error('Error generating signed URL:', error);
+    res.status(500).send('Failed to generate secure upload link');
+  }
+});
+
 module.exports = router;
