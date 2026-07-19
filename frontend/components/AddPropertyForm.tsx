@@ -43,10 +43,10 @@ export default function AddPropertyForm() {
       const imagePath = res.data; // api returns data directly
       setImages((prev) => [...prev, imagePath]);
       setUploading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       setUploading(false);
-      alert("Error uploading image");
+      alert(`Error uploading image: ${error.response?.data || error.message || 'Unknown error'}`);
     }
   };
 
