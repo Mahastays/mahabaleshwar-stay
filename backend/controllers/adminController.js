@@ -11,12 +11,16 @@ const loginAdmin = async (req, res) => {
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (username === adminUsername && password === adminPassword) {
+    const User = require('../models/userModel');
+    let adminUser = await User.findOne({ email: 'admin@mahastays.com' });
+    const adminId = adminUser ? adminUser._id.toString() : '6a187998f404a4afd4d4b1f7'; // fallback to valid ObjectId format
+
     res.json({
-      _id: 'admin_id_custom',
+      _id: adminId,
       name: 'Super Admin',
       email: 'admin@mahastays.com',
       isAdmin: true,
-      token: generateToken('admin_id_custom'),
+      token: generateToken(adminId),
     });
   } else {
     res.status(401).json({ message: 'Invalid admin credentials' });
