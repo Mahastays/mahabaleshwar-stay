@@ -103,7 +103,7 @@ export default function AddPropertyForm() {
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
       console.error(error);
-      alert("Error adding property");
+      alert(`Error adding property: ${error.response?.data?.message || ''} ${error.response?.data?.error || error.message}`);
     }
   };
 

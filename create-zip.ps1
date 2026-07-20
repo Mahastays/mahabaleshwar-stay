@@ -1,5 +1,5 @@
 $source = "d:\STUDY MATERIAL\MAHABLESHWAR STAY\backend"
-$destination = "d:\STUDY MATERIAL\MAHABLESHWAR STAY\backend-deploy-v4.zip"
+$destination = "d:\STUDY MATERIAL\MAHABLESHWAR STAY\backend-deploy-v6.zip"
 $exclude = @('node_modules', '.env', 'package-lock.json')
 
 Add-Type -Assembly 'System.IO.Compression'
@@ -9,7 +9,7 @@ if (Test-Path $destination) { Remove-Item $destination }
 
 $zip = [System.IO.Compression.ZipFile]::Open($destination, 'Create')
 
-$files = Get-ChildItem -Path $source -Recurse -File | Where-Object {
+$files = Get-ChildItem -Path $source -Recurse -File -Force | Where-Object {
     $relativePath = $_.FullName.Substring($source.Length + 1)
     $firstPart = $relativePath.Split('\')[0]
     -not ($exclude -contains $firstPart)
