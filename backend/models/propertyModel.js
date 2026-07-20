@@ -53,7 +53,7 @@ const propertySchema = mongoose.Schema(
       type: {
         type: String,
         enum: ['Point'],
-        default: 'Point',
+        required: false,
       },
       coordinates: {
         type: [Number], // [longitude, latitude]

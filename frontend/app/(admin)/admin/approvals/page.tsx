@@ -237,7 +237,7 @@ export default function AdminApprovalsPage() {
                       >
                         <XCircle className="w-5 h-5" />
                       </button>
-                      <Link href={`/properties/${prop._id}`} className="px-3 py-1.5 text-xs font-medium border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+                      <Link href={`/properties/${prop._id}`} target="_blank" className="px-3 py-1.5 text-xs font-medium border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
                         Review
                       </Link>
                     </div>

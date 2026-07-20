@@ -60,7 +60,7 @@ const createProperty = async (req, res) => {
   try {
     const { title, description, price, images, amenities, type, location } = req.body;
 
-    const property = new Property({
+    const propertyObj = {
       title,
       description,
       price,
@@ -68,10 +68,21 @@ const createProperty = async (req, res) => {
       amenities,
       type,
       location,
-      coordinates: req.body.coordinates || undefined,
       host: req.user._id,
       status: 'pending',
-    });
+    };
+
+    if (req.body.coordinates && req.body.coordinates.lat && req.body.coordinates.lng) {
+      propertyObj.coordinates = req.body.coordinates;
+      propertyObj.locationPoint = {
+        type: 'Point',
+        coordinates: [req.body.coordinates.lng, req.body.coordinates.lat] // [longitude, latitude]
+      };
+    } else {
+      propertyObj.locationPoint = undefined;
+    }
+
+    const property = new Property(propertyObj);
 
     const createdProperty = await property.save();
     res.status(201).json(createdProperty);
@@ -103,8 +114,12 @@ const updateProperty = async (req, res) => {
       property.type = type || property.type;
       property.location = location || property.location;
       
-      if (req.body.coordinates) {
+      if (req.body.coordinates && req.body.coordinates.lat && req.body.coordinates.lng) {
         property.coordinates = req.body.coordinates;
+        property.locationPoint = {
+          type: 'Point',
+          coordinates: [req.body.coordinates.lng, req.body.coordinates.lat]
+        };
       }
 
       const updatedProperty = await property.save();

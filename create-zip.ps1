@@ -1,5 +1,5 @@
 $source = "d:\STUDY MATERIAL\MAHABLESHWAR STAY\backend"
-$destination = "d:\STUDY MATERIAL\MAHABLESHWAR STAY\backend-deploy-v6.zip"
+$destination = "d:\STUDY MATERIAL\MAHABLESHWAR STAY\backend-deploy-v14.zip"
 $exclude = @('node_modules', '.env', 'package-lock.json')
 
 Add-Type -Assembly 'System.IO.Compression'

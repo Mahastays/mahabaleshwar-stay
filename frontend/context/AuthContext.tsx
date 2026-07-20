@@ -91,6 +91,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await signOut(auth);
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('adminToken');
   };
 
   return (
