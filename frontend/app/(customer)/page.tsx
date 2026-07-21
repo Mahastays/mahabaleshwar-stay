@@ -108,9 +108,22 @@ const dummyProperties: Property[] = [
 
 async function fetchProperties(): Promise<{ properties: Property[], error: boolean }> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    let apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    
+    let serverApiUrl = apiUrl;
+    if (typeof window === 'undefined') {
+      // Fix for Node fetch requiring absolute URLs during SSR (AWS Amplify)
+      if (serverApiUrl.startsWith('/')) {
+        serverApiUrl = process.env.BACKEND_URL || 'http://localhost:5000/api';
+      }
+      // Fix for Next.js 14+ server-side fetch on Windows resolving localhost to ::1 instead of 127.0.0.1
+      if (serverApiUrl.includes('localhost')) {
+        serverApiUrl = serverApiUrl.replace('localhost', '127.0.0.1');
+      }
+    }
+    
     const baseUrl = apiUrl.replace('/api', '');
-    const res = await fetch(`${apiUrl}/properties`, { next: { revalidate: 60 } });
+    const res = await fetch(`${serverApiUrl}/properties`, { next: { revalidate: 60 } });
     if (!res.ok) return { properties: [], error: true };
     const data = await res.json();
     const properties = data.map((p: any) => ({

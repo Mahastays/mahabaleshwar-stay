@@ -13,14 +13,26 @@ interface Property {
 
 async function searchProperties(query: string): Promise<Property[]> {
   try {
-    const res = await fetch('http://localhost:5000/api/properties', { next: { revalidate: 60 } });
+    let apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    let serverApiUrl = apiUrl;
+    if (typeof window === 'undefined') {
+      if (serverApiUrl.startsWith('/')) {
+        serverApiUrl = process.env.BACKEND_URL || 'http://localhost:5000/api';
+      }
+      if (serverApiUrl.includes('localhost')) {
+        serverApiUrl = serverApiUrl.replace('localhost', '127.0.0.1');
+      }
+    }
+    const res = await fetch(`${serverApiUrl}/properties`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const data = await res.json();
+    
+    const baseUrl = apiUrl.replace('/api', '');
     
     let properties = data.map((p: any) => ({
       id: p._id,
       image: p.images?.[0]
-        ? (p.images[0].startsWith('/') ? `http://localhost:5000${p.images[0]}` : p.images[0])
+        ? (p.images[0].startsWith('/') ? `${baseUrl}${p.images[0]}` : p.images[0])
         : 'https://images.unsplash.com/photo-1542314831-c6a4d14d8c53?auto=format&fit=crop&q=80',
       isFavorite: false,
       title: p.title,
