@@ -101,9 +101,9 @@ export default function AddPropertyForm() {
       setImages([]);
 
       setTimeout(() => setSuccess(false), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert(`Error adding property: ${error.response?.data?.message || ''} ${error.response?.data?.error || error.message}`);
+      alert(`Error adding property: ${error.response?.data?.message || ''} ${error.response?.data?.error || error.message || ''}`);
     }
   };
 
