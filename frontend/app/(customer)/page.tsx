@@ -124,8 +124,13 @@ async function fetchProperties(): Promise<{ properties: Property[], error: boole
     
     const baseUrl = apiUrl.replace('/api', '');
     const res = await fetch(`${serverApiUrl}/properties`, { next: { revalidate: 60 } });
-    if (!res.ok) return { properties: [], error: true };
+    if (!res.ok) return { properties: dummyProperties, error: false };
     const data = await res.json();
+    
+    if (!data || data.length === 0) {
+      return { properties: dummyProperties, error: false };
+    }
+    
     const properties = data.map((p: any) => ({
       id: p._id,
       image: p.images[0] ? (p.images[0].startsWith('/') ? `${baseUrl}${p.images[0]}` : p.images[0]) : '',
@@ -142,7 +147,7 @@ async function fetchProperties(): Promise<{ properties: Property[], error: boole
     return { properties, error: false };
   } catch (error) {
     console.error('Failed to fetch properties:', error);
-    return { properties: [], error: true };
+    return { properties: dummyProperties, error: false };
   }
 }
 
