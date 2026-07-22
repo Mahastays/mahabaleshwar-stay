@@ -114,7 +114,7 @@ async function fetchProperties(): Promise<{ properties: Property[], error: strin
     if (typeof window === 'undefined') {
       // Fix for Node fetch requiring absolute URLs during SSR (AWS Amplify)
       if (serverApiUrl.startsWith('/')) {
-        serverApiUrl = process.env.BACKEND_URL || 'http://localhost:5000/api';
+        serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
       }
       // Fix for Next.js 14+ server-side fetch on Windows resolving localhost to ::1 instead of 127.0.0.1
       if (serverApiUrl.includes('localhost')) {
