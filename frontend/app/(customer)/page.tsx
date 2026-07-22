@@ -106,7 +106,7 @@ const dummyProperties: Property[] = [
   }
 ];
 
-async function fetchProperties(): Promise<{ properties: Property[], error: boolean }> {
+async function fetchProperties(): Promise<{ properties: Property[], error: string | null }> {
   try {
     let apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
     
@@ -124,16 +124,18 @@ async function fetchProperties(): Promise<{ properties: Property[], error: boole
     
     const baseUrl = apiUrl.replace('/api', '');
     const res = await fetch(`${serverApiUrl}/properties`, { next: { revalidate: 60 } });
-    if (!res.ok) return { properties: dummyProperties, error: false };
+    if (!res.ok) {
+      return { properties: [], error: `API responded with status ${res.status}: ${res.statusText} for ${serverApiUrl}/properties` };
+    }
     const data = await res.json();
     
-    if (!data || data.length === 0) {
-      return { properties: dummyProperties, error: false };
+    if (!data || !Array.isArray(data)) {
+      return { properties: [], error: 'API returned invalid data format' };
     }
     
     const properties = data.map((p: any) => ({
       id: p._id,
-      image: p.images[0] ? (p.images[0].startsWith('/') ? `${baseUrl}${p.images[0]}` : p.images[0]) : '',
+      image: p.images && p.images[0] ? (p.images[0].startsWith('/') ? `${baseUrl}${p.images[0]}` : p.images[0]) : '',
       isFavorite: false,
       title: p.title,
       distance: p.location,
@@ -144,10 +146,10 @@ async function fetchProperties(): Promise<{ properties: Property[], error: boole
       isFeatured: p.isFeatured,
       coordinates: p.coordinates
     }));
-    return { properties, error: false };
-  } catch (error) {
+    return { properties, error: null };
+  } catch (error: any) {
     console.error('Failed to fetch properties:', error);
-    return { properties: dummyProperties, error: false };
+    return { properties: [], error: error.message || 'Unknown network error' };
   }
 }
 
@@ -195,6 +197,9 @@ export default async function Home({
           <div className="text-center py-24">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Oops, something went wrong</h2>
             <p className="text-gray-500">We couldn't load the properties. Please try again later.</p>
+            <div className="mt-4 p-4 bg-red-50 text-red-700 text-sm rounded-lg max-w-2xl mx-auto border border-red-200">
+              <strong>Error Details:</strong> {error}
+            </div>
           </div>
         ) : properties.length > 0 ? (
           <div className="space-y-10">
