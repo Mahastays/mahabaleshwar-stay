@@ -33,7 +33,11 @@ interface Property {
 
 async function fetchPlace(slug: string): Promise<ExplorePlace | null> {
   try {
-    const res = await fetch(`http://localhost:5000/api/explore/${slug}`, {
+    let serverApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    if (typeof window === 'undefined' && serverApiUrl.startsWith('/')) {
+      serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+    }
+    const res = await fetch(`${serverApiUrl}/explore/${slug}`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) return null;
@@ -45,7 +49,11 @@ async function fetchPlace(slug: string): Promise<ExplorePlace | null> {
 
 async function fetchNearbyProperties(): Promise<Property[]> {
   try {
-    const res = await fetch('http://localhost:5000/api/properties', {
+    let serverApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    if (typeof window === 'undefined' && serverApiUrl.startsWith('/')) {
+      serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+    }
+    const res = await fetch(`${serverApiUrl}/properties`, {
       next: { revalidate: 60 },
     });
     if (!res.ok) return [];

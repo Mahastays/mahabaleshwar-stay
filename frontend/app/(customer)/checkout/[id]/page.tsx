@@ -16,7 +16,11 @@ interface PropertyDetail {
 
 async function fetchProperty(id: string): Promise<PropertyDetail | null> {
   try {
-    const res = await fetch(`http://localhost:5000/api/properties/${id}`, { next: { revalidate: 60 } });
+    let serverApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    if (typeof window === 'undefined' && serverApiUrl.startsWith('/')) {
+      serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+    }
+    const res = await fetch(`${serverApiUrl}/properties/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
     return await res.json();
   } catch (error) {
