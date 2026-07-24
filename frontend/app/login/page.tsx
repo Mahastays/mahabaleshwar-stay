@@ -142,7 +142,7 @@ export default function LoginPage() {
               <img 
                 src="/logo_cropped.png" 
                 alt="MahaStays Logo" 
-                className="h-16 w-auto object-contain" 
+                className="h-12 w-auto object-contain" 
               />
             </div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">Welcome back</h2>

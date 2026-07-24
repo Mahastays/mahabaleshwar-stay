@@ -38,7 +38,7 @@ export default function Navbar() {
               <img 
                 src="/logo_cropped.png" 
                 alt="MahaStays Logo" 
-                className="h-10 md:h-14 w-auto object-contain cursor-pointer" 
+                className="h-8 md:h-11 w-auto object-contain cursor-pointer" 
               />
             </Link>
           </div>
