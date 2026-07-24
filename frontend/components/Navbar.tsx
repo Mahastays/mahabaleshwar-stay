@@ -10,8 +10,22 @@ import api from '@/lib/api';
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+
+  // Handle Scroll state
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close menu on outside click
   useEffect(() => {
@@ -28,12 +42,23 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="sticky top-0 z-50 bg-white pt-4 pb-2 md:pb-6 border-b border-gray-100 md:border-b-0 shadow-sm md:shadow-none">
+      <div className={`sticky top-0 z-50 bg-white pt-4 pb-2 md:pb-6 md:border-b-0 transition-all duration-300 ${isScrolled ? 'shadow-sm md:shadow-md border-b border-gray-200 pb-4 md:pb-6' : 'shadow-sm md:shadow-none border-b border-gray-100'}`}>
         <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
           {/* Top Row */}
           <div className="flex justify-between items-center min-h-[64px] md:min-h-[80px]">
+          {/* Mobile Compact Search Pill (Absolute positioning over the top row) */}
+          <div className={`md:hidden absolute left-4 right-4 top-3 transition-all duration-300 z-10 ${isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+            <div className="flex items-center bg-white border border-gray-300 rounded-full shadow-md px-4 py-2 w-full cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+               <Search size={18} className="text-gray-900 mr-3" strokeWidth={3} />
+               <div className="flex flex-col flex-1">
+                  <span className="text-[13px] font-bold text-gray-900">Anywhere</span>
+                  <span className="text-[11px] text-gray-500">Any week • Add guests</span>
+               </div>
+            </div>
+          </div>
+
           {/* Logo */}
-          <div className="flex-shrink-0 flex-1 flex items-center">
+          <div className={`flex-shrink-0 flex-1 flex items-center transition-opacity duration-300 ${isScrolled ? 'opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto' : 'opacity-100'}`}>
             <Link href="/" className="flex items-center">
               <img 
                 src="/logo_cropped.png" 
@@ -43,21 +68,37 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Toggles */}
-          <div className="hidden md:flex flex-1 items-center justify-center space-x-6">
-            <Link href="/" className={`flex items-center space-x-2 cursor-pointer transition ${pathname === '/' ? 'text-gray-900 font-semibold border-b-[3px] border-gray-900 pb-1' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full px-4 py-2 font-medium'}`}>
-               <span className="text-[16px]">Homes</span>
-            </Link>
-            <Link href="/explore" className={`flex items-center space-x-2 cursor-pointer transition ${pathname === '/explore' ? 'text-gray-900 font-semibold border-b-[3px] border-gray-900 pb-1' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full px-4 py-2 font-medium'}`}>
-               <span className="text-[16px]">Explore</span>
-            </Link>
-            <Link href="/experiences" className={`flex items-center space-x-2 cursor-pointer transition ${pathname === '/experiences' ? 'text-gray-900 font-semibold border-b-[3px] border-gray-900 pb-1' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-full px-4 py-2 font-medium'}`}>
-               <span className="text-[16px]">Experiences</span>
-            </Link>
+          {/* Toggles / Center Area */}
+          <div className="hidden md:flex flex-1 items-center justify-center space-x-6 relative">
+            {/* Links with Icons (Unscrolled State) */}
+            <div className={`flex items-center space-x-6 transition-all duration-300 ${isScrolled ? 'opacity-0 scale-95 pointer-events-none absolute' : 'opacity-100 scale-100 relative'}`}>
+               <Link href="/" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition ${pathname === '/' ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <img src="/icon_homes.png" className={`w-8 h-8 object-contain transition-transform ${pathname === '/' ? 'scale-110' : 'opacity-70 hover:opacity-100 hover:scale-110'}`} alt="Homes" />
+                 <span className={`text-[14px] ${pathname === '/' ? 'border-b-[3px] border-gray-900 pb-1' : ''}`}>Homes</span>
+               </Link>
+               <Link href="/explore" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition ${pathname === '/explore' ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <img src="/icon_explore.png" className={`w-8 h-8 object-contain transition-transform ${pathname === '/explore' ? 'scale-110' : 'opacity-70 hover:opacity-100 hover:scale-110'}`} alt="Explore" />
+                 <span className={`text-[14px] ${pathname === '/explore' ? 'border-b-[3px] border-gray-900 pb-1' : ''}`}>Explore</span>
+               </Link>
+               <Link href="/experiences" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition ${pathname === '/experiences' ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <img src="/icon_experiences.png" className={`w-8 h-8 object-contain transition-transform ${pathname === '/experiences' ? 'scale-110' : 'opacity-70 hover:opacity-100 hover:scale-110'}`} alt="Experiences" />
+                 <span className={`text-[14px] ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-1' : ''}`}>Experiences</span>
+               </Link>
+            </div>
+
+            {/* Compact Search Pill (Scrolled State) */}
+            <div className={`flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer pl-4 pr-2 py-2 w-[350px] ${isScrolled ? 'opacity-100 scale-100 relative' : 'opacity-0 scale-95 pointer-events-none absolute'}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+               <div className="flex-1 text-[13px] font-semibold truncate border-r border-gray-300 px-2 text-center text-gray-900">Anywhere</div>
+               <div className="flex-1 text-[13px] font-semibold truncate border-r border-gray-300 px-2 text-center text-gray-900">Any week</div>
+               <div className="flex-1 text-[13px] text-gray-500 truncate px-2 text-center">Add guests</div>
+               <div className="bg-brand-red text-white p-2 rounded-full ml-1">
+                 <Search size={14} strokeWidth={3} />
+               </div>
+            </div>
           </div>
 
           {/* Profile Section */}
-          <div className="flex-1 flex items-center justify-end space-x-2 relative" ref={menuRef}>
+          <div className={`flex-1 flex items-center justify-end space-x-2 relative transition-opacity duration-300 ${isScrolled ? 'opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto' : 'opacity-100'}`} ref={menuRef}>
             {user && (user.role === 'host' || user.role === 'admin') && (
               <Link href="/vendor" className="hidden md:block text-sm font-semibold hover:bg-gray-100 px-4 py-2 rounded-full cursor-pointer transition">
                 Host Dashboard
@@ -166,7 +207,7 @@ export default function Navbar() {
     </div>
   </div>
 
-  <div className="bg-white pb-6 pt-4 md:pt-0 border-b border-gray-200 shadow-sm z-40 relative">
+  <div className={`bg-white z-40 relative transition-all duration-300 ease-in-out origin-top overflow-hidden ${isScrolled ? 'max-h-0 opacity-0 pb-0 pt-0 border-none' : 'max-h-[200px] opacity-100 pb-6 pt-4 md:pt-0 border-b border-gray-200 shadow-sm'}`}>
         <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
           {/* Search Pill Row */}
           <div className="flex justify-center md:mt-0">
