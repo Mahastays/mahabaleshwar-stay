@@ -17,12 +17,12 @@ export default function ExperiencesPage() {
           <img 
             src="https://images.unsplash.com/photo-1596401057633-54a8fe8ef647?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
             alt="Mahabaleshwar Hills" 
-            className="w-full h-full object-cover opacity-60"
+            className="w-full h-full object-cover opacity-60 animate-hero-zoom"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
         </div>
         
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16">
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16 animate-fade-in-up">
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg">
             Experience the Magic of Mahabaleshwar
           </h1>
@@ -44,7 +44,7 @@ export default function ExperiencesPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="p-6 bg-brand-red/10 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300">
+            <div className="p-6 bg-brand-red/10 rounded-2xl text-center card-hover-smooth cursor-pointer border border-brand-red/20 shadow-sm">
               <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-brand-red shadow-sm">
                 <Mountain size={28} />
               </div>
@@ -52,7 +52,7 @@ export default function ExperiencesPage() {
               <p className="text-gray-600 text-sm">Over 14 major viewpoints offering breathtaking vistas of valleys and sunsets.</p>
             </div>
             
-            <div className="p-6 bg-brand-brown/10 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300">
+            <div className="p-6 bg-brand-brown/10 rounded-2xl text-center card-hover-smooth cursor-pointer border border-brand-brown/20 shadow-sm">
               <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-brand-brown/100 shadow-sm">
                 <Leaf size={28} />
               </div>
@@ -60,7 +60,7 @@ export default function ExperiencesPage() {
               <p className="text-gray-600 text-sm">Trek through dense, rare evergreen forests that stay vibrant year-round.</p>
             </div>
             
-            <div className="p-6 bg-green-50 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300">
+            <div className="p-6 bg-green-50 rounded-2xl text-center card-hover-smooth cursor-pointer border border-green-200/60 shadow-sm">
               <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-green-600 shadow-sm">
                 <Compass size={28} />
               </div>
@@ -68,7 +68,7 @@ export default function ExperiencesPage() {
               <p className="text-gray-600 text-sm">Explore trails leading to ancient temples and centuries-old forts.</p>
             </div>
             
-            <div className="p-6 bg-orange-50 rounded-2xl text-center hover:-translate-y-2 transition-transform duration-300">
+            <div className="p-6 bg-orange-50 rounded-2xl text-center card-hover-smooth cursor-pointer border border-orange-200/60 shadow-sm">
               <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-orange-500 shadow-sm">
                 <Utensils size={28} />
               </div>

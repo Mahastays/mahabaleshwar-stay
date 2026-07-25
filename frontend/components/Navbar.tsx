@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Globe, Menu, UserRound, LogOut, Luggage } from 'lucide-react';
+import { Search, Globe, Menu, UserRound, LogOut, Luggage, X } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useState, useRef, useEffect } from 'react';
@@ -11,6 +11,10 @@ export default function Navbar() {
   const { user, loading, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileSearchModalOpen, setMobileSearchModalOpen] = useState(false);
+  const [mobileQuery, setMobileQuery] = useState('');
+  const [mobileCheckin, setMobileCheckin] = useState('');
+  const [mobileGuests, setMobileGuests] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -48,11 +52,11 @@ export default function Navbar() {
           <div className="flex justify-between items-center min-h-[64px] md:min-h-[80px]">
           {/* Mobile Compact Search Pill (Absolute positioning over the top row) */}
           <div className={`md:hidden absolute left-4 right-4 top-3 transition-all duration-300 z-10 ${isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
-            <div className="flex items-center bg-white border border-gray-300 rounded-full shadow-md px-4 py-2 w-full cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-               <Search size={18} className="text-gray-900 mr-3" strokeWidth={3} />
+            <div className="flex items-center bg-white border border-gray-300 rounded-full shadow-md hover:shadow-lg active:scale-[0.97] px-4 py-2.5 w-full cursor-pointer transition-all duration-200" onClick={() => setMobileSearchModalOpen(true)}>
+               <Search size={18} className="text-gray-900 mr-3 flex-shrink-0" strokeWidth={3} />
                <div className="flex flex-col flex-1">
-                  <span className="text-[13px] font-bold text-gray-900">Anywhere</span>
-                  <span className="text-[11px] text-gray-500">Any week • Add guests</span>
+                  <span className="text-[13px] font-bold text-gray-900">Start your search</span>
+                  <span className="text-[11px] text-gray-500">Anywhere • Any week • Add guests</span>
                </div>
             </div>
           </div>
@@ -207,10 +211,10 @@ export default function Navbar() {
     </div>
   </div>
 
-  <div className={`bg-white z-40 relative transition-all duration-300 ease-in-out origin-top overflow-hidden ${isScrolled ? 'max-h-0 opacity-0 pb-0 pt-0 border-none' : 'max-h-[200px] opacity-100 pb-6 pt-4 md:pt-0 border-b border-gray-200 shadow-sm'}`}>
+  <div className={`bg-white z-40 relative transition-all duration-300 ease-in-out origin-top overflow-hidden ${isScrolled ? 'max-h-0 opacity-0 pb-0 pt-0 border-none' : 'max-h-[300px] opacity-100 pb-3 pt-1 md:pb-6 md:pt-0 border-b border-gray-200 shadow-sm'}`}>
         <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
-          {/* Search Pill Row */}
-          <div className="flex justify-center md:mt-0">
+          {/* Desktop Search Bar */}
+          <div className="hidden md:flex justify-center md:mt-0">
             <form action="/search" className="max-w-[850px] w-full flex flex-col md:flex-row items-center bg-white border border-gray-300 rounded-3xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 p-2 md:p-2 gap-2 md:gap-0">
               <div className="w-full md:flex-[1.5] flex flex-col px-4 md:px-8 border-b md:border-b-0 md:border-r border-gray-200 md:border-gray-300 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
                 <label htmlFor="query" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">Where</label>
@@ -231,14 +235,130 @@ export default function Navbar() {
                     <option value="4+">4+ guests</option>
                   </select>
                 </div>
-                <button type="submit" className="bg-brand-red text-white rounded-full p-3 md:p-4 hover:bg-red-600 transition-colors cursor-pointer flex-shrink-0 ml-4">
+                <button type="submit" className="btn-interactive bg-brand-red text-white rounded-full p-3 md:p-4 hover:bg-red-600 cursor-pointer flex-shrink-0 ml-4">
                   <Search size={20} strokeWidth={3} />
                 </button>
               </div>
             </form>
           </div>
+
+          {/* Mobile Search Button Pill (Unscrolled State) */}
+          <div className="md:hidden flex justify-center py-1">
+            <div 
+              onClick={() => setMobileSearchModalOpen(true)} 
+              className="flex items-center justify-center bg-white border border-gray-200 rounded-full shadow-[0_3px_12px_rgba(0,0,0,0.08)] hover:shadow-md hover:scale-[1.015] active:scale-[0.96] transition-all duration-200 py-3.5 px-6 w-full max-w-[420px] cursor-pointer gap-2.5 text-gray-900 font-medium text-[15px]"
+            >
+              <Search size={18} strokeWidth={2.5} className="text-gray-900 flex-shrink-0" />
+              <span className="font-semibold text-[15px] text-gray-900 tracking-wide">Start your search</span>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Search Modal */}
+      {mobileSearchModalOpen && (
+        <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-md z-[100] flex flex-col md:hidden transition-all duration-300">
+          <div className="bg-gray-50 flex-1 flex flex-col h-full overflow-y-auto w-full animate-fade-in-scale">
+            {/* Top Header of Modal */}
+            <div className="bg-white px-4 py-3 border-b border-gray-200 flex items-center justify-between sticky top-0 z-10">
+              <button 
+                onClick={() => setMobileSearchModalOpen(false)}
+                type="button"
+                className="p-2 -ml-2 text-gray-700 hover:bg-gray-100 rounded-full transition cursor-pointer"
+              >
+                <X size={22} />
+              </button>
+              <span className="text-[16px] font-extrabold text-gray-900">Search Stays</span>
+              <button 
+                type="button"
+                onClick={() => {
+                  setMobileQuery('');
+                  setMobileCheckin('');
+                  setMobileGuests('');
+                }}
+                className="text-[13px] font-semibold text-gray-600 hover:text-gray-900 underline py-1 px-2 cursor-pointer"
+              >
+                Clear all
+              </button>
+            </div>
+
+            {/* Modal Content - Cards for Where, When, Who */}
+            <form action="/search" onSubmit={() => setMobileSearchModalOpen(false)} className="flex-1 flex flex-col p-4 space-y-4">
+              {/* Where Card */}
+              <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
+                <label htmlFor="mobile-query" className="text-xl font-extrabold text-gray-900 block mb-3">
+                  Where to?
+                </label>
+                <div className="flex items-center border border-gray-300 rounded-xl px-3.5 py-3 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition bg-gray-50/50">
+                  <Search size={20} className="text-gray-500 mr-3 flex-shrink-0" />
+                  <input 
+                    type="text" 
+                    id="mobile-query" 
+                    name="query"
+                    value={mobileQuery}
+                    onChange={(e) => setMobileQuery(e.target.value)}
+                    placeholder="Search destinations (e.g. Mahabaleshwar, Panchgani)" 
+                    className="w-full bg-transparent text-[15px] text-gray-900 placeholder-gray-500 font-medium outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* When Card */}
+              <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
+                <label htmlFor="mobile-checkin" className="text-xl font-extrabold text-gray-900 block mb-3">
+                  When&apos;s your trip?
+                </label>
+                <div className="border border-gray-300 rounded-xl px-3.5 py-3 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition bg-gray-50/50">
+                  <input 
+                    type="date" 
+                    min={new Date().toISOString().split('T')[0]} 
+                    id="mobile-checkin" 
+                    name="checkin"
+                    value={mobileCheckin}
+                    onChange={(e) => setMobileCheckin(e.target.value)}
+                    className="w-full bg-transparent text-[15px] text-gray-900 cursor-pointer outline-none font-medium"
+                  />
+                </div>
+              </div>
+
+              {/* Who Card */}
+              <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
+                <label htmlFor="mobile-guests" className="text-xl font-extrabold text-gray-900 block mb-3">
+                  Who&apos;s coming?
+                </label>
+                <div className="border border-gray-300 rounded-xl px-3.5 py-3 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition bg-gray-50/50">
+                  <select 
+                    id="mobile-guests" 
+                    name="guests"
+                    value={mobileGuests}
+                    onChange={(e) => setMobileGuests(e.target.value)}
+                    className="w-full bg-transparent text-[15px] text-gray-900 cursor-pointer outline-none font-medium"
+                  >
+                    <option value="">Add guests</option>
+                    <option value="1">1 guest</option>
+                    <option value="2">2 guests</option>
+                    <option value="3">3 guests</option>
+                    <option value="4+">4+ guests</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex-1 min-h-[40px]"></div>
+
+              {/* Sticky Bottom Submit Bar */}
+              <div className="sticky bottom-0 bg-white -mx-4 -mb-4 p-4 border-t border-gray-200 flex justify-end shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+                <button 
+                  type="submit" 
+                  className="btn-interactive w-full bg-brand-red text-white font-bold text-base rounded-xl py-3.5 px-6 flex items-center justify-center gap-2 hover:bg-red-600 shadow-md cursor-pointer"
+                >
+                  <Search size={20} strokeWidth={3} />
+                  <span>Search</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }

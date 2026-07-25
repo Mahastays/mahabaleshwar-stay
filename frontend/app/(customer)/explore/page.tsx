@@ -54,10 +54,10 @@ export default async function ExplorePage() {
         <img
           src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2000&q=80"
           alt="Mahabaleshwar landscape"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover animate-hero-zoom"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-        <div className="relative z-10 px-6 md:px-20 pb-16 max-w-4xl">
+        <div className="relative z-10 px-6 md:px-20 pb-16 max-w-4xl animate-fade-in-up">
           <p className="text-brand-red font-semibold tracking-widest text-sm uppercase mb-3">
             Discover • Explore • Experience
           </p>
@@ -81,9 +81,9 @@ export default async function ExplorePage() {
             { value: '14+', label: 'Viewpoints' },
             { value: '5', label: 'Sacred Rivers' },
             { value: '300+', label: 'Years of History' },
-          ].map((s) => (
-            <div key={s.label}>
-              <p className="text-3xl font-extrabold text-brand-red">{s.value}</p>
+          ].map((s, idx) => (
+            <div key={s.label} className="transition-transform duration-300 hover:scale-105 cursor-pointer">
+              <p className="text-3xl font-extrabold text-brand-red animate-float" style={{ animationDelay: `${idx * 0.5}s` }}>{s.value}</p>
               <p className="text-sm text-gray-500 mt-1 font-medium">{s.label}</p>
             </div>
           ))}
@@ -103,7 +103,7 @@ export default async function ExplorePage() {
                 <Link
                   key={place._id}
                   href={`/explore/${place.slug}`}
-                  className={`group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300 ${
+                  className={`group card-hover-smooth relative overflow-hidden rounded-3xl shadow-lg ${
                     i === 0 ? 'md:col-span-2' : ''
                   }`}
                 >
@@ -158,7 +158,7 @@ export default async function ExplorePage() {
                 <Link
                   key={place._id}
                   href={`/explore/${place.slug}`}
-                  className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300"
+                  className="group card-hover-smooth bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm"
                 >
                   <div className="relative h-52 overflow-hidden">
                     <img

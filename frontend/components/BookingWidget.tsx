@@ -9,21 +9,29 @@ interface BookingWidgetProps {
 }
 
 export default function BookingWidget({ propertyId, pricePerNight }: BookingWidgetProps) {
-  // Set default dates: checkin today, checkout in 5 days
+  // Set default dates: checkin today, checkout tomorrow (1 night)
   const today = new Date();
-  const nextWeek = new Date(today);
-  nextWeek.setDate(today.getDate() + 5);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
 
   const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
   const [checkin, setCheckin] = useState(formatDate(today));
-  const [checkout, setCheckout] = useState(formatDate(nextWeek));
+  const [checkout, setCheckout] = useState(formatDate(tomorrow));
   const [guests, setGuests] = useState('1 guest');
-  const [nights, setNights] = useState(5);
+  const [nights, setNights] = useState(1);
 
-  // Constants
-  const cleaningFee = 1500;
-  const serviceFee = 3800;
+  // Automatically adjust checkout date if user picks a checkin date that is after or equal to checkout
+  const handleCheckinChange = (newCheckin: string) => {
+    setCheckin(newCheckin);
+    const start = new Date(newCheckin);
+    const end = new Date(checkout);
+    if (end <= start || isNaN(end.getTime())) {
+      const nextDay = new Date(start);
+      nextDay.setDate(start.getDate() + 1);
+      setCheckout(formatDate(nextDay));
+    }
+  };
 
   // Calculate nights when dates change
   useEffect(() => {
@@ -39,7 +47,7 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
   }, [checkin, checkout]);
 
   const subtotal = pricePerNight * nights;
-  const total = nights > 0 ? subtotal + cleaningFee + serviceFee : 0;
+  const total = subtotal;
 
   // URL parameters for passing data to checkout
   const checkoutUrl = `/checkout/${propertyId}?checkin=${checkin}&checkout=${checkout}&guests=${encodeURIComponent(guests)}&price=${pricePerNight}`;
@@ -59,9 +67,9 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
             <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900">Check-in</label>
             <input 
               type="date" 
-              className="w-full text-sm outline-none bg-transparent cursor-pointer" 
+              className="w-full text-sm outline-none bg-transparent cursor-pointer font-medium text-gray-800" 
               value={checkin} 
-              onChange={(e) => setCheckin(e.target.value)}
+              onChange={(e) => handleCheckinChange(e.target.value)}
               min={formatDate(new Date())}
             />
           </div>
@@ -69,7 +77,7 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
             <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900">Checkout</label>
             <input 
               type="date" 
-              className="w-full text-sm outline-none bg-transparent cursor-pointer" 
+              className="w-full text-sm outline-none bg-transparent cursor-pointer font-medium text-gray-800" 
               value={checkout} 
               onChange={(e) => setCheckout(e.target.value)}
               min={checkin}
@@ -79,7 +87,7 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
         <div className="p-3 hover:bg-gray-50 cursor-pointer transition-colors">
           <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900">Guests</label>
           <select 
-            className="w-full text-sm outline-none bg-transparent mt-1 cursor-pointer"
+            className="w-full text-sm outline-none bg-transparent mt-1 cursor-pointer font-medium text-gray-800"
             value={guests}
             onChange={(e) => setGuests(e.target.value)}
           >
@@ -94,7 +102,7 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
       </div>
 
       {nights > 0 ? (
-        <Link href={checkoutUrl} className="block text-center w-full bg-brand-red text-white font-semibold py-3.5 rounded-xl hover:bg-brand-red transition-colors shadow-md shadow-brand-red/20 active:scale-[0.98] cursor-pointer">
+        <Link href={checkoutUrl} className="block text-center w-full bg-brand-red text-white font-semibold py-3.5 rounded-xl hover:bg-red-600 transition-colors shadow-md shadow-brand-red/20 active:scale-[0.98] cursor-pointer">
           Reserve
         </Link>
       ) : (
@@ -109,16 +117,8 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
         <>
           <div className="space-y-3 pb-6 border-b border-gray-200">
             <div className="flex justify-between text-gray-600">
-              <span className="underline cursor-pointer">₹{pricePerNight.toLocaleString()} x {nights} nights</span>
+              <span className="underline cursor-pointer">₹{pricePerNight.toLocaleString()} x {nights} {nights === 1 ? 'night' : 'nights'}</span>
               <span>₹{subtotal.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-gray-600">
-              <span className="underline cursor-pointer">Cleaning fee</span>
-              <span>₹{cleaningFee.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-gray-600">
-              <span className="underline cursor-pointer">Service fee</span>
-              <span>₹{serviceFee.toLocaleString()}</span>
             </div>
           </div>
 

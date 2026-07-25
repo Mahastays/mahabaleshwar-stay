@@ -44,10 +44,10 @@ const createBooking = async (req, res) => {
       return res.status(409).json({ message: 'Concurrent booking detected. Please try again.' });
     }
 
-    const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
-    const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
+    const cleaningFee = 0;
+    const serviceFee = 0;
     const subtotal = propertyObj.price * nights;
-    const calculatedTotal = subtotal + cleaningFee + serviceFee;
+    const calculatedTotal = subtotal;
 
     const booking = new Booking({
       user: req.user._id,

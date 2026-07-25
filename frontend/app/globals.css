@@ -16,7 +16,48 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Custom utilities */
+/* ── Ultra-Smooth Animations & Micro-Interactions (PC & Mobile) ── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -25,10 +66,71 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Smooth Entrance Classes */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  .animate-fade-in-scale {
+    animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-hero-zoom {
+    animation: kenBurns 14s infinite alternate ease-in-out;
+  }
+
+  .animate-float {
+    animation: floatSlow 4s infinite ease-in-out;
+  }
+
+  /* Premium Card Hover & Touch Dynamics */
+  .card-hover-smooth {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    will-change: transform, box-shadow;
+  }
+  .card-hover-smooth:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: 0 18px 38px -6px rgba(0, 0, 0, 0.12), 0 10px 22px -6px rgba(0, 0, 0, 0.05);
+  }
+  .card-hover-smooth:active {
+    transform: scale(0.975);
+    box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Interactive Button Dynamics */
+  .btn-interactive {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+  }
+  .btn-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px -4px rgba(255, 0, 0, 0.35);
+  }
+  .btn-interactive:active {
+    transform: translateY(0) scale(0.96);
+    box-shadow: 0 3px 10px -2px rgba(255, 0, 0, 0.25);
+  }
 }
 
 /* Hide the invisible reCAPTCHA badge that causes a white square */
 .grecaptcha-badge { 
   visibility: hidden !important;
   display: none !important;
+}
+
+/* ── Leaflet Interactive Map Stacking Safeguards ── */
+.leaflet-container {
+  z-index: 1 !important;
+  isolation: isolate !important;
+  border-radius: inherit;
+}
+
+.leaflet-top,
+.leaflet-bottom,
+.leaflet-control {
+  z-index: 5 !important;
+}
+
+.leaflet-pane {
+  z-index: 1 !important;
 }

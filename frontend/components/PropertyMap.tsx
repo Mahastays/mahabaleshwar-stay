@@ -37,22 +37,22 @@ export default function PropertyMap({ location, title }: PropertyMapProps) {
   const position: [number, number] = [location.lat, location.lng];
 
   return (
-    <div className="h-[400px] w-full rounded-2xl overflow-hidden shadow-sm border border-gray-200 z-0">
+    <div className="relative isolate z-[1] h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden shadow-md border border-gray-200">
       <MapContainer 
         center={position} 
-        zoom={13} 
+        zoom={14} 
         scrollWheelZoom={false} 
-        className="h-full w-full"
+        className="h-full w-full relative z-0"
       >
-        <ChangeView center={position} zoom={13} />
+        <ChangeView center={position} zoom={14} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker position={position} icon={customIcon}>
           <Popup>
-            <div className="font-semibold">{title}</div>
-            <div className="text-sm text-gray-500 mt-1">Exact location provided after booking.</div>
+            <div className="font-bold text-gray-900 text-sm">{title}</div>
+            <div className="text-xs text-gray-600 mt-1">Exact location provided after reservation.</div>
           </Popup>
         </Marker>
       </MapContainer>

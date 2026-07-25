@@ -46,7 +46,7 @@ export default function WhyChooseUs() {
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.05)] border border-gray-50 hover:shadow-[0_4px_25px_rgb(0,0,0,0.08)] transition-shadow"
+              className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.05)] border border-gray-100 card-hover-smooth cursor-pointer"
             >
               <div className="bg-[#eef5f9] w-16 h-16 rounded-full flex items-center justify-center mb-6">
                 <feature.icon className="text-[#e85d38]" size={28} strokeWidth={2.5} />

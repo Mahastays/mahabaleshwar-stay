@@ -54,14 +54,12 @@ export default async function CheckoutPage({
     const diffDays = Math.ceil(Math.abs(end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
     nights = diffDays;
   } else {
-    nights = 5;
+    nights = 1;
   }
 
   const priceNum = resolvedSearchParams.price ? parseInt(resolvedSearchParams.price) : property.price;
   const subtotal = priceNum * nights;
-  const cleaningFee = 1500;
-  const serviceFee = 3800;
-  const total = nights > 0 ? subtotal + cleaningFee + serviceFee : 0;
+  const total = nights > 0 ? subtotal : 0;
 
   const propertyImage = property.images?.[0]
     ? (property.images[0].startsWith('/') ? `http://localhost:5000${property.images[0]}` : property.images[0])
@@ -133,16 +131,8 @@ export default async function CheckoutPage({
               <h3 className="text-lg font-bold mb-4">Price details</h3>
               <div className="space-y-4 text-gray-600">
                 <div className="flex justify-between">
-                  <span>₹{priceNum.toLocaleString()} x {nights} nights</span>
+                  <span>₹{priceNum.toLocaleString()} x {nights} {nights === 1 ? 'night' : 'nights'}</span>
                   <span>₹{subtotal.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Cleaning fee</span>
-                  <span>₹{cleaningFee.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Service fee</span>
-                  <span>₹{serviceFee.toLocaleString()}</span>
                 </div>
               </div>
 

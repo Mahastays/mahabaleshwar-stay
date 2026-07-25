@@ -30,11 +30,10 @@ const createOrder = async (req, res) => {
     const diffTime = Math.abs(end - start);
     const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
 
-    // Configurable fees via environment variables
-    const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
-    const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
+    const cleaningFee = 0;
+    const serviceFee = 0;
     const subtotal = property.price * nights;
-    const calculatedTotal = subtotal + cleaningFee + serviceFee;
+    const calculatedTotal = subtotal;
 
     const options = {
       amount: Math.round(calculatedTotal * 100), // Server-side pricing! (paise)
@@ -110,11 +109,11 @@ const verifyPaymentAndBook = async (req, res) => {
         const end = new Date(checkOutDate);
         const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
         
-        const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
-        const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
+        const cleaningFee = 0;
+        const serviceFee = 0;
         const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
         const subtotal = property.price * nights;
-        const calculatedTotal = subtotal + cleaningFee + serviceFee;
+        const calculatedTotal = subtotal;
 
         const newBooking = new Booking({
           user: req.user._id,
@@ -197,8 +196,8 @@ const handleWebhook = async (req, res) => {
               const end = new Date(notes.checkOutDate);
               const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
               
-              const cleaningFee = parseInt(process.env.CLEANING_FEE || '1500', 10);
-              const serviceFee = parseInt(process.env.SERVICE_FEE || '3800', 10);
+              const cleaningFee = 0;
+              const serviceFee = 0;
               const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
               const subtotal = property.price * nights;
               

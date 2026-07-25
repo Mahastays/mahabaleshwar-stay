@@ -45,7 +45,7 @@ export default function PropertyCard({ id, image, isFavorite, title, distance, d
   };
 
   return (
-    <Link href={`/properties/${id}`} className="group cursor-pointer flex flex-col gap-3">
+    <Link href={`/properties/${id}`} className="group card-hover-smooth cursor-pointer flex flex-col gap-3.5 bg-white p-3 rounded-2xl border border-gray-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
       {/* Image Container */}
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-200">
         <Image 
@@ -53,7 +53,7 @@ export default function PropertyCard({ id, image, isFavorite, title, distance, d
           alt={title} 
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-108"
         />
         
         {/* Badges and Icons */}

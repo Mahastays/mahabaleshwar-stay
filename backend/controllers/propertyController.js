@@ -69,7 +69,7 @@ const createProperty = async (req, res) => {
       type,
       location,
       host: req.user._id,
-      status: 'pending',
+      status: 'approved',
     };
 
     if (req.body.coordinates && req.body.coordinates.lat && req.body.coordinates.lng) {

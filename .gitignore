@@ -5,3 +5,11 @@ node_modules/
 dist/
 build/
 .next/
+*ServiceAccountKey*.json
+testv12/
+testzip/
+test-zip-extract*/
+backend-v8-extract/
+*.zip
+*.tar.gz
+scratch/
