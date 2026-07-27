@@ -12,10 +12,10 @@ const reviewSchema = mongoose.Schema(
       required: true,
       ref: 'User',
     },
-    // The booking that enables this review (ensures only guests who stayed can review)
+    // Optional booking reference
     booking: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      required: false,
       ref: 'Booking',
     },
     rating: {
@@ -42,8 +42,8 @@ const reviewSchema = mongoose.Schema(
   }
 );
 
-// Prevent user from reviewing the same property from the same booking more than once
-reviewSchema.index({ booking: 1 }, { unique: true });
+// Prevent user from reviewing the same property more than once
+reviewSchema.index({ property: 1, user: 1 }, { unique: true });
 
 // --- Static method to calculate average rating ---
 // This gets called every time a review is added or removed

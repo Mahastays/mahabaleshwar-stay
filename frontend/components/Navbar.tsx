@@ -75,18 +75,24 @@ export default function Navbar() {
           {/* Toggles / Center Area */}
           <div className="hidden md:flex flex-1 items-center justify-center space-x-6 relative">
             {/* Links with Icons (Unscrolled State) */}
-            <div className={`flex items-center space-x-6 transition-all duration-300 ${isScrolled ? 'opacity-0 scale-95 pointer-events-none absolute' : 'opacity-100 scale-100 relative'}`}>
-               <Link href="/" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition ${pathname === '/' ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>
-                 <img src="/icon_homes.png" className={`w-8 h-8 object-contain transition-transform ${pathname === '/' ? 'scale-110' : 'opacity-70 hover:opacity-100 hover:scale-110'}`} alt="Homes" />
-                 <span className={`text-[14px] ${pathname === '/' ? 'border-b-[3px] border-gray-900 pb-1' : ''}`}>Homes</span>
+            <div className={`flex items-center space-x-8 lg:space-x-12 transition-all duration-300 ${isScrolled ? 'opacity-0 scale-95 pointer-events-none absolute' : 'opacity-100 scale-100 relative'}`}>
+               <Link href="/" className={`flex flex-col items-center justify-center space-y-1.5 cursor-pointer group transition-all duration-200 ${pathname === '/' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <div className="relative flex items-center justify-center">
+                   <img src="/icon_homes.png" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-115 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Homes" />
+                 </div>
+                 <span className={`text-[14px] lg:text-[15px] transition-all duration-200 ${pathname === '/' ? 'border-b-[3px] border-gray-900 pb-1 font-bold' : 'group-hover:text-gray-900 font-medium'}`}>Homes</span>
                </Link>
-               <Link href="/explore" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition ${pathname === '/explore' ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>
-                 <img src="/icon_explore.png" className={`w-8 h-8 object-contain transition-transform ${pathname === '/explore' ? 'scale-110' : 'opacity-70 hover:opacity-100 hover:scale-110'}`} alt="Explore" />
-                 <span className={`text-[14px] ${pathname === '/explore' ? 'border-b-[3px] border-gray-900 pb-1' : ''}`}>Explore</span>
+               <Link href="/explore" className={`flex flex-col items-center justify-center space-y-1.5 cursor-pointer group transition-all duration-200 ${pathname === '/explore' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <div className="relative flex items-center justify-center">
+                   <img src="/icon_explore.png" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-115 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/explore' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Explore" />
+                 </div>
+                 <span className={`text-[14px] lg:text-[15px] transition-all duration-200 ${pathname === '/explore' ? 'border-b-[3px] border-gray-900 pb-1 font-bold' : 'group-hover:text-gray-900 font-medium'}`}>Explore</span>
                </Link>
-               <Link href="/experiences" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition ${pathname === '/experiences' ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>
-                 <img src="/icon_experiences.png" className={`w-8 h-8 object-contain transition-transform ${pathname === '/experiences' ? 'scale-110' : 'opacity-70 hover:opacity-100 hover:scale-110'}`} alt="Experiences" />
-                 <span className={`text-[14px] ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-1' : ''}`}>Experiences</span>
+               <Link href="/experiences" className={`flex flex-col items-center justify-center space-y-1.5 cursor-pointer group transition-all duration-200 ${pathname === '/experiences' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <div className="relative flex items-center justify-center">
+                   <img src="/icon_experiences.png" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-115 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/experiences' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Experiences" />
+                 </div>
+                 <span className={`text-[14px] lg:text-[15px] transition-all duration-200 ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-1 font-bold' : 'group-hover:text-gray-900 font-medium'}`}>Experiences</span>
                </Link>
             </div>
 
@@ -140,14 +146,17 @@ export default function Navbar() {
             {menuOpen && (
               <div className="absolute right-0 top-14 bg-white border border-gray-200 rounded-xl shadow-xl w-56 py-2 z-50">
                 <div className="md:hidden border-b border-gray-100 mb-1 pb-1">
-                  <Link href="/" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
-                    Homes
+                  <Link href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
+                    <img src="/icon_homes.png" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Homes" />
+                    <span className="text-[15px]">Homes</span>
                   </Link>
-                  <Link href="/explore" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
-                    Explore
+                  <Link href="/explore" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
+                    <img src="/icon_explore.png" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Explore" />
+                    <span className="text-[15px]">Explore</span>
                   </Link>
-                  <Link href="/experiences" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
-                    Experiences
+                  <Link href="/experiences" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
+                    <img src="/icon_experiences.png" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Experiences" />
+                    <span className="text-[15px]">Experiences</span>
                   </Link>
                 </div>
                 {user ? (
@@ -240,6 +249,22 @@ export default function Navbar() {
                 </button>
               </div>
             </form>
+          </div>
+
+          {/* Mobile Interactive Category Icons (Unscrolled State) */}
+          <div className="md:hidden flex justify-around items-center pt-2 pb-3 px-2 border-b border-gray-100 mb-3">
+            <Link href="/" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition-all duration-200 group px-3 py-1.5 rounded-2xl active:scale-95 ${pathname === '/' ? 'text-gray-900 font-extrabold bg-gray-50/80' : 'text-gray-500 hover:text-gray-900'}`}>
+              <img src="/icon_homes.png" className={`w-11 h-11 object-contain transition-all duration-300 transform drop-shadow-sm ${pathname === '/' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Homes" />
+              <span className={`text-[13px] tracking-tight ${pathname === '/' ? 'border-b-[3px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Homes</span>
+            </Link>
+            <Link href="/explore" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition-all duration-200 group px-3 py-1.5 rounded-2xl active:scale-95 ${pathname === '/explore' ? 'text-gray-900 font-extrabold bg-gray-50/80' : 'text-gray-500 hover:text-gray-900'}`}>
+              <img src="/icon_explore.png" className={`w-11 h-11 object-contain transition-all duration-300 transform drop-shadow-sm ${pathname === '/explore' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Explore" />
+              <span className={`text-[13px] tracking-tight ${pathname === '/explore' ? 'border-b-[3px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Explore</span>
+            </Link>
+            <Link href="/experiences" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition-all duration-200 group px-3 py-1.5 rounded-2xl active:scale-95 ${pathname === '/experiences' ? 'text-gray-900 font-extrabold bg-gray-50/80' : 'text-gray-500 hover:text-gray-900'}`}>
+              <img src="/icon_experiences.png" className={`w-11 h-11 object-contain transition-all duration-300 transform drop-shadow-sm ${pathname === '/experiences' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Experiences" />
+              <span className={`text-[13px] tracking-tight ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Experiences</span>
+            </Link>
           </div>
 
           {/* Mobile Search Button Pill (Unscrolled State) */}

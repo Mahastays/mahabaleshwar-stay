@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function WhatsAppWidget() {
   // Replace this with the actual phone number you want to use
-  const phoneNumber = "917741002157"; 
+  const phoneNumber = "919405419021"; 
   const message = "Hi! I need some help with Maha Stay.";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 

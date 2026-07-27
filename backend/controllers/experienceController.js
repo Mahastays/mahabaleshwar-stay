@@ -38,7 +38,7 @@ const createExperience = async (req, res) => {
       image,
       price,
       duration,
-      status: 'pending', // Default status
+      status: req.user.role === 'admin' ? 'approved' : 'pending',
     });
 
     const createdExperience = await experience.save();

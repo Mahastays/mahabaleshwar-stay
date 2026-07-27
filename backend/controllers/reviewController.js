@@ -18,49 +18,27 @@ const getPropertyReviews = async (req, res) => {
 
 // @desc    Create a review
 // @route   POST /api/reviews
-// @access  Private (customer who has a confirmed booking)
+// @access  Private (customer users only)
 const createReview = async (req, res) => {
-  const { propertyId, bookingId, rating, title, comment } = req.body;
+  const { propertyId, rating, title, comment, bookingId } = req.body;
 
   try {
-    // 1. Check if the booking exists and belongs to this user
-    const booking = await Booking.findById(bookingId);
-
-    if (!booking) {
-      return res.status(404).json({ message: 'Booking not found' });
+    // Strictly forbid property hosts from leaving ratings or reviews
+    if (req.user.role === 'host') {
+      return res.status(403).json({ message: 'Property hosts are strictly not permitted to submit ratings or reviews.' });
     }
 
-    if (booking.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'You can only review bookings you made' });
-    }
-
-    // 2. Check if the booking is for the right property
-    if (booking.property.toString() !== propertyId) {
-      return res.status(400).json({ message: 'Booking does not match this property' });
-    }
-
-    // 3. Check if booking is confirmed (not cancelled/pending)
-    if (booking.status !== 'confirmed') {
-      return res.status(400).json({ message: 'You can only review properties from confirmed bookings' });
-    }
-
-    // 4. Check if the checkout date has passed (can't review before staying)
-    const now = new Date();
-    if (new Date(booking.checkOutDate) > now) {
-      return res.status(400).json({ message: 'You can only review a property after your stay is complete' });
-    }
-
-    // 5. Check if a review already exists for this booking
-    const existingReview = await Review.findOne({ booking: bookingId });
+    // Check if user has already reviewed this stay/property
+    const existingReview = await Review.findOne({ property: propertyId, user: req.user._id });
     if (existingReview) {
-      return res.status(400).json({ message: 'You have already reviewed this stay' });
+      return res.status(400).json({ message: 'You have already posted a rating and review for this property.' });
     }
 
-    // 6. Create the review
+    // Create the review
     const review = await Review.create({
       property: propertyId,
       user: req.user._id,
-      booking: bookingId,
+      booking: bookingId || undefined,
       rating,
       title,
       comment,
@@ -70,11 +48,10 @@ const createReview = async (req, res) => {
 
     res.status(201).json(populatedReview);
   } catch (error) {
-    // Handle duplicate booking index error
     if (error.code === 11000) {
-      return res.status(400).json({ message: 'You have already reviewed this stay' });
+      return res.status(400).json({ message: 'You have already posted a rating and review for this property.' });
     }
-    res.status(400).json({ message: 'Failed to create review', error: error.message });
+    res.status(400).json({ message: 'Failed to submit review', error: error.message });
   }
 };
 
@@ -102,32 +79,23 @@ const deleteReview = async (req, res) => {
   }
 };
 
-// @desc    Check if user can review a property (has eligible booking)
+// @desc    Check if user can review a property
 // @route   GET /api/reviews/can-review/:propertyId
 // @access  Private
 const checkCanReview = async (req, res) => {
   try {
-    const now = new Date();
-
-    // Find a confirmed booking for this property by this user that has already checked out
-    const eligibleBooking = await Booking.findOne({
-      user: req.user._id,
-      property: req.params.propertyId,
-      status: 'confirmed',
-      checkOutDate: { $lte: now },
-    });
-
-    if (!eligibleBooking) {
-      return res.json({ canReview: false, reason: 'No completed stays found for this property' });
+    // Strictly forbid property hosts from leaving ratings or reviews
+    if (req.user.role === 'host') {
+      return res.json({ canReview: false, reason: 'Property hosts are not permitted to review properties.' });
     }
 
-    // Check if they've already reviewed this booking
-    const existingReview = await Review.findOne({ booking: eligibleBooking._id });
+    // Check if they've already reviewed this property
+    const existingReview = await Review.findOne({ property: req.params.propertyId, user: req.user._id });
     if (existingReview) {
-      return res.json({ canReview: false, reason: 'Already reviewed', existingReview });
+      return res.json({ canReview: false, reason: 'You have already reviewed this stay.', existingReview });
     }
 
-    res.json({ canReview: true, bookingId: eligibleBooking._id });
+    res.json({ canReview: true });
   } catch (error) {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }

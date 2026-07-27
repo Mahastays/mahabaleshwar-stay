@@ -8,7 +8,7 @@ const mockProperties = [
     reviews: 124,
     images: ["https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
     amenities: ["Free WiFi", "Pool", "Spa", "Breakfast Included"],
-    type: "Resort",
+    type: "Near Venna Lake",
     location: "Venna Lake Road, Mahabaleshwar"
   },
   {
@@ -20,7 +20,7 @@ const mockProperties = [
     reviews: 89,
     images: ["https://images.unsplash.com/photo-1542314831-c6a4d14d8c53?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
     amenities: ["Free WiFi", "Kitchen", "Parking", "Pet Friendly"],
-    type: "Homestay",
+    type: "Forest Stays",
     location: "Panchgani-Mahabaleshwar Road"
   },
   {
@@ -32,7 +32,7 @@ const mockProperties = [
     reviews: 210,
     images: ["https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
     amenities: ["Free WiFi", "Pool", "Restaurant", "Gym"],
-    type: "Hotel",
+    type: "Valley View",
     location: "Old Mahabaleshwar"
   },
   {
@@ -44,7 +44,7 @@ const mockProperties = [
     reviews: 65,
     images: ["https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
     amenities: ["Campfire", "Trekking", "Meals Included"],
-    type: "Tent",
+    type: "Forest Stays",
     location: "Tapola Road"
   },
   {
@@ -56,7 +56,7 @@ const mockProperties = [
     reviews: 42,
     images: ["https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
     amenities: ["Private Pool", "Chef", "Free WiFi", "AC"],
-    type: "Villa",
+    type: "Villas",
     location: "Bombay Point"
   },
   {
@@ -68,7 +68,7 @@ const mockProperties = [
     reviews: 156,
     images: ["https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"],
     amenities: ["Free WiFi", "Locker", "Common Room"],
-    type: "Hostel",
+    type: "Pools",
     location: "Market Area"
   }
 ];

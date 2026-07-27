@@ -11,7 +11,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
     title: "",
     description: "",
     price: "",
-    type: "Resort",
+    type: "Villas",
     location: "",
     amenities: "",
     lat: "",
@@ -178,12 +178,12 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-brown focus:border-transparent outline-none transition-all bg-white"
             >
-              <option value="Resort">Resort</option>
-              <option value="Homestay">Homestay</option>
-              <option value="Hotel">Hotel</option>
-              <option value="Tent">Tent</option>
-              <option value="Villa">Villa</option>
-              <option value="Hostel">Hostel</option>
+              <option value="Villas">Villas</option>
+              <option value="Heritage">Heritage</option>
+              <option value="Valley View">Valley View</option>
+              <option value="Near Venna Lake">Near Venna Lake</option>
+              <option value="Forest Stays">Forest Stays</option>
+              <option value="Pools">Pools</option>
             </select>
           </div>
 

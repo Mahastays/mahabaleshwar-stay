@@ -41,7 +41,7 @@ export default function ContactPage() {
               <h3 className="text-xl font-semibold text-gray-900">Call Us</h3>
               <p className="text-gray-600">
                 Mon-Sun from 9am to 8pm<br />
-                +91 98765 43210
+                +91 94054 19021
               </p>
             </div>
 

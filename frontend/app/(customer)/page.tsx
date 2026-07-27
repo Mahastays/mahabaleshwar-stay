@@ -29,7 +29,7 @@ const dummyProperties: Property[] = [
     dateRange: 'Any week',
     price: '₹5,000',
     rating: 4.9,
-    category: 'Villa',
+    category: 'Villas',
     isFeatured: true,
   },
   {
@@ -41,7 +41,7 @@ const dummyProperties: Property[] = [
     dateRange: 'Any week',
     price: '₹1,500',
     rating: 4.7,
-    category: 'Tent',
+    category: 'Forest Stays',
     isFeatured: false,
   },
   {
@@ -53,7 +53,7 @@ const dummyProperties: Property[] = [
     dateRange: 'Any week',
     price: '₹12,000',
     rating: 5.0,
-    category: 'Resort',
+    category: 'Heritage',
     isFeatured: true,
   },
   {
@@ -65,7 +65,7 @@ const dummyProperties: Property[] = [
     dateRange: 'Any week',
     price: '₹3,500',
     rating: 4.5,
-    category: 'Cottage',
+    category: 'Valley View',
     isFeatured: false,
   },
   {
@@ -77,7 +77,7 @@ const dummyProperties: Property[] = [
     dateRange: 'Any week',
     price: '₹2,800',
     rating: 4.8,
-    category: 'Cottage',
+    category: 'Near Venna Lake',
     isFeatured: false,
   },
   {
@@ -89,7 +89,7 @@ const dummyProperties: Property[] = [
     dateRange: 'Any week',
     price: '₹4,000',
     rating: 4.2,
-    category: 'Homestay',
+    category: 'Pools',
     isFeatured: false,
   },
   {
@@ -101,7 +101,7 @@ const dummyProperties: Property[] = [
     dateRange: 'Any week',
     price: '₹8,500',
     rating: 4.6,
-    category: 'Hotel',
+    category: 'Heritage',
     isFeatured: false,
   }
 ];

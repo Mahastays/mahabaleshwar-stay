@@ -9,7 +9,7 @@ interface PropertiesClientProps {
   initialProperties: Property[];
 }
 
-const PROPERTY_TYPES = ['Villa', 'Resort', 'Homestay', 'Hotel', 'Cottage', 'Tent'];
+const PROPERTY_TYPES = ['Villas', 'Heritage', 'Valley View', 'Near Venna Lake', 'Forest Stays', 'Pools'];
 
 export default function PropertiesClient({ initialProperties }: PropertiesClientProps) {
   const [searchQuery, setSearchQuery] = useState('');

@@ -12,4 +12,8 @@ router.post('/verify', protect, verifyPaymentAndBook);
 // Razorpay Webhook (public access, verified via signature)
 router.post('/webhook', handleWebhook);
 
+// Activity payment routes (requires login)
+router.post('/activity/create-order', protect, require('../controllers/paymentController').createActivityOrder);
+router.post('/activity/verify', protect, require('../controllers/paymentController').verifyActivityPayment);
+
 module.exports = router;

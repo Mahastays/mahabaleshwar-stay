@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const properties = require('./data/mockProperties');
+const mockExperiences = require('./data/mockExperiences');
 const Property = require('./models/propertyModel');
+const Experience = require('./models/experienceModel');
 const User = require('./models/userModel');
 const connectDB = require('./config/db');
 
@@ -12,6 +14,7 @@ connectDB();
 const importData = async () => {
   try {
     await Property.deleteMany();
+    await Experience.deleteMany();
     await User.deleteMany();
 
     const createdUsers = await User.insertMany([
@@ -27,7 +30,13 @@ const importData = async () => {
       return { ...rest, host: vendorId, status: 'approved' };
     });
 
+    const sampleExperiences = mockExperiences.map((exp) => ({
+      ...exp,
+      user: vendorId,
+    }));
+
     await Property.insertMany(sampleProperties);
+    await Experience.insertMany(sampleExperiences);
 
     console.log('Data Imported!');
     process.exit();
@@ -40,6 +49,7 @@ const importData = async () => {
 const destroyData = async () => {
   try {
     await Property.deleteMany();
+    await Experience.deleteMany();
     await User.deleteMany();
 
     console.log('Data Destroyed!');

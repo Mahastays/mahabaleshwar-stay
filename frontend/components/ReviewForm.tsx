@@ -6,7 +6,7 @@ import api from '@/lib/api';
 
 interface ReviewFormProps {
   propertyId: string;
-  bookingId: string;
+  bookingId?: string | null;
   onReviewSubmitted: () => void;
 }
 

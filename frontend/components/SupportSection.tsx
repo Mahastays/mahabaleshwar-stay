@@ -35,7 +35,7 @@ export default function SupportSection() {
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900">Call Us Directly</h4>
-                  <p className="text-gray-500">+91 77410 02157</p>
+                  <p className="text-gray-500">+91 94054 19021</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">

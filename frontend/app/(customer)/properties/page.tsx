@@ -26,7 +26,7 @@ const dummyProperties: Property[] = [
     price: '₹5,000',
     rawPrice: 5000,
     rating: 4.9,
-    category: 'Villa'
+    category: 'Villas'
   },
   {
     id: 'd2',
@@ -38,7 +38,7 @@ const dummyProperties: Property[] = [
     price: '₹1,500',
     rawPrice: 1500,
     rating: 4.7,
-    category: 'Tent'
+    category: 'Forest Stays'
   },
   {
     id: 'd3',
@@ -50,7 +50,7 @@ const dummyProperties: Property[] = [
     price: '₹12,000',
     rawPrice: 12000,
     rating: 5.0,
-    category: 'Resort'
+    category: 'Heritage'
   },
   {
     id: 'd4',
@@ -62,7 +62,7 @@ const dummyProperties: Property[] = [
     price: '₹3,500',
     rawPrice: 3500,
     rating: 4.5,
-    category: 'Cottage'
+    category: 'Valley View'
   }
 ];
 
