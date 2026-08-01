@@ -33,12 +33,6 @@ const bookingSchema = mongoose.Schema(
     subtotal: {
       type: Number,
     },
-    serviceFee: {
-      type: Number,
-    },
-    cleaningFee: {
-      type: Number,
-    },
     platformCommission: {
       type: Number,
     },

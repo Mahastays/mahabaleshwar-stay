@@ -31,8 +31,6 @@ const createOrder = async (req, res) => {
     const diffTime = Math.abs(end - start);
     const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
 
-    const cleaningFee = 0;
-    const serviceFee = 0;
     const subtotal = property.price * nights;
     const calculatedTotal = subtotal;
 
@@ -110,8 +108,6 @@ const verifyPaymentAndBook = async (req, res) => {
         const end = new Date(checkOutDate);
         const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
         
-        const cleaningFee = 0;
-        const serviceFee = 0;
         const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
         const subtotal = property.price * nights;
         const calculatedTotal = subtotal;
@@ -124,11 +120,9 @@ const verifyPaymentAndBook = async (req, res) => {
           guests: parseInt(guests) || 1,
           totalPrice: calculatedTotal,
           subtotal,
-          serviceFee,
-          cleaningFee,
           platformCommission: subtotal * vendorCommissionRate,
-          vendorPayout: subtotal - (subtotal * vendorCommissionRate) + cleaningFee,
-          adminRevenue: (subtotal * vendorCommissionRate) + serviceFee,
+          vendorPayout: subtotal - (subtotal * vendorCommissionRate),
+          adminRevenue: subtotal * vendorCommissionRate,
           status: 'confirmed',
           paymentId: razorpay_payment_id,
           orderId: razorpay_order_id,
@@ -197,8 +191,6 @@ const handleWebhook = async (req, res) => {
               const end = new Date(notes.checkOutDate);
               const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
               
-              const cleaningFee = 0;
-              const serviceFee = 0;
               const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
               const subtotal = property.price * nights;
               
@@ -210,11 +202,9 @@ const handleWebhook = async (req, res) => {
                 guests: parseInt(notes.guests) || 1,
                 totalPrice: (paymentData.amount / 100),
                 subtotal,
-                serviceFee,
-                cleaningFee,
                 platformCommission: subtotal * vendorCommissionRate,
-                vendorPayout: subtotal - (subtotal * vendorCommissionRate) + cleaningFee,
-                adminRevenue: (subtotal * vendorCommissionRate) + serviceFee,
+                vendorPayout: subtotal - (subtotal * vendorCommissionRate),
+                adminRevenue: subtotal * vendorCommissionRate,
                 status: 'confirmed',
                 paymentId: paymentData.id,
                 orderId: paymentData.order_id,

@@ -12,7 +12,7 @@ export default function SupportSection() {
   };
 
   return (
-    <section className="py-20 bg-brand-red/10 mb-12">
+    <section className="py-20 bg-white mb-12">
       <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Left Column: Info */}

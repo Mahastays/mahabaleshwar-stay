@@ -14,9 +14,13 @@ export default function Navbar() {
   const [mobileSearchModalOpen, setMobileSearchModalOpen] = useState(false);
   const [mobileQuery, setMobileQuery] = useState('');
   const [mobileCheckin, setMobileCheckin] = useState('');
-  const [mobileGuests, setMobileGuests] = useState('');
+  const [adults, setAdults] = useState(0);
+  const [children, setChildren] = useState(0);
+  const [guestDropdownOpen, setGuestDropdownOpen] = useState(false);
+  const guestDropdownRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const totalGuests = adults + children;
 
   // Handle Scroll state
   useEffect(() => {
@@ -31,11 +35,14 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menu on outside click
+  // Close menu and guest dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
+      }
+      if (guestDropdownRef.current && !guestDropdownRef.current.contains(e.target as Node)) {
+        setGuestDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClick);
@@ -56,7 +63,7 @@ export default function Navbar() {
                <Search size={18} className="text-gray-900 mr-3 flex-shrink-0" strokeWidth={3} />
                <div className="flex flex-col flex-1">
                   <span className="text-[13px] font-bold text-gray-900">Start your search</span>
-                  <span className="text-[11px] text-gray-500">Anywhere • Any week • Add guests</span>
+                  <span className="text-[11px] text-gray-500">Anywhere • Any week • {totalGuests > 0 ? `${totalGuests} guest${totalGuests > 1 ? 's' : ''}` : 'Add guests'}</span>
                </div>
             </div>
           </div>
@@ -100,7 +107,7 @@ export default function Navbar() {
             <div className={`flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer pl-4 pr-2 py-2 w-[350px] ${isScrolled ? 'opacity-100 scale-100 relative' : 'opacity-0 scale-95 pointer-events-none absolute'}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                <div className="flex-1 text-[13px] font-semibold truncate border-r border-gray-300 px-2 text-center text-gray-900">Anywhere</div>
                <div className="flex-1 text-[13px] font-semibold truncate border-r border-gray-300 px-2 text-center text-gray-900">Any week</div>
-               <div className="flex-1 text-[13px] text-gray-500 truncate px-2 text-center">Add guests</div>
+               <div className="flex-1 text-[13px] text-gray-500 truncate px-2 text-center">{totalGuests > 0 ? `${totalGuests} guest${totalGuests > 1 ? 's' : ''}` : 'Add guests'}</div>
                <div className="bg-brand-red text-white p-2 rounded-full ml-1">
                  <Search size={14} strokeWidth={3} />
                </div>
@@ -220,7 +227,7 @@ export default function Navbar() {
     </div>
   </div>
 
-  <div className={`bg-white z-40 relative transition-all duration-300 ease-in-out origin-top overflow-hidden ${isScrolled ? 'max-h-0 opacity-0 pb-0 pt-0 border-none' : 'max-h-[300px] opacity-100 pb-3 pt-1 md:pb-6 md:pt-0 border-b border-gray-200 shadow-sm'}`}>
+  <div className={`bg-white z-40 relative transition-all duration-300 ease-in-out origin-top ${isScrolled ? 'overflow-hidden max-h-0 opacity-0 pb-0 pt-0 border-none' : 'overflow-visible max-h-[300px] opacity-100 pb-3 pt-1 md:pb-6 md:pt-0 border-b border-gray-200 shadow-sm'}`}>
         <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
           {/* Desktop Search Bar */}
           <div className="hidden md:flex justify-center md:mt-0">
@@ -233,17 +240,91 @@ export default function Navbar() {
                 <label htmlFor="checkin" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">When</label>
                 <input type="date" min={new Date().toISOString().split('T')[0]} id="checkin" name="checkin" className="text-[14px] text-gray-900 placeholder-gray-500 truncate outline-none bg-transparent cursor-pointer w-full" />
               </div>
-              <div className="w-full md:flex-[1.5] flex items-center justify-between px-4 md:pl-8 md:pr-2 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
-                <div className="flex flex-col flex-1">
-                  <label htmlFor="guests" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">Who</label>
-                  <select id="guests" name="guests" className="text-[14px] text-gray-900 placeholder-gray-500 truncate outline-none bg-transparent cursor-pointer w-full">
-                    <option value="">Add guests</option>
-                    <option value="1">1 guest</option>
-                    <option value="2">2 guests</option>
-                    <option value="3">3 guests</option>
-                    <option value="4+">4+ guests</option>
-                  </select>
+              <div className="w-full md:flex-[1.5] flex items-center justify-between px-4 md:pl-8 md:pr-2 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1 relative" ref={guestDropdownRef}>
+                <div 
+                  className="flex flex-col flex-1 select-none py-1"
+                  onClick={() => setGuestDropdownOpen(!guestDropdownOpen)}
+                >
+                  <span className="text-[12px] font-extrabold text-gray-900 tracking-wide">Who</span>
+                  <span className="text-[14px] text-gray-900 truncate font-medium">
+                    {totalGuests > 0 ? (
+                      `${totalGuests} guest${totalGuests > 1 ? 's' : ''}${adults > 0 && children > 0 ? ` (${adults} A, ${children} C)` : ''}`
+                    ) : (
+                      <span className="text-gray-500 font-normal">Add guests</span>
+                    )}
+                  </span>
+                  <input type="hidden" name="guests" value={totalGuests > 0 ? `${totalGuests} guest${totalGuests > 1 ? 's' : ''}` : ''} />
                 </div>
+
+                {guestDropdownOpen && (
+                  <div 
+                    onClick={(e) => e.stopPropagation()} 
+                    className="absolute right-0 top-16 bg-white border border-gray-200 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.14)] p-6 w-[320px] z-50 animate-in fade-in zoom-in-95 duration-150 select-none cursor-default"
+                  >
+                    {/* Adults */}
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                      <div className="flex flex-col">
+                        <span className="text-[15px] font-bold text-gray-900">Adults</span>
+                        <span className="text-[12px] text-gray-500">Ages 13 or above</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setAdults(Math.max(0, adults - 1))}
+                          disabled={adults === 0}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold bg-white cursor-pointer shadow-2xs"
+                        >
+                          -
+                        </button>
+                        <span className="w-5 text-center font-bold text-gray-900 text-base">{adults}</span>
+                        <button
+                          type="button"
+                          onClick={() => setAdults(adults + 1)}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all text-base font-bold bg-white cursor-pointer shadow-2xs"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Children */}
+                    <div className="flex items-center justify-between py-3">
+                      <div className="flex flex-col">
+                        <span className="text-[15px] font-bold text-gray-900">Children</span>
+                        <span className="text-[12px] text-gray-500">Ages 2–12</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setChildren(Math.max(0, children - 1))}
+                          disabled={children === 0}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold bg-white cursor-pointer shadow-2xs"
+                        >
+                          -
+                        </button>
+                        <span className="w-5 text-center font-bold text-gray-900 text-base">{children}</span>
+                        <button
+                          type="button"
+                          onClick={() => setChildren(children + 1)}
+                          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all text-base font-bold bg-white cursor-pointer shadow-2xs"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mt-2 pt-2 border-t border-gray-100 flex justify-end">
+                      <button 
+                        type="button"
+                        onClick={() => setGuestDropdownOpen(false)}
+                        className="text-[13px] font-bold text-gray-900 hover:text-brand-red underline transition-colors px-2 py-1 cursor-pointer"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <button type="submit" className="btn-interactive bg-brand-red text-white rounded-full p-3 md:p-4 hover:bg-red-600 cursor-pointer flex-shrink-0 ml-4">
                   <Search size={20} strokeWidth={3} />
                 </button>
@@ -299,7 +380,8 @@ export default function Navbar() {
                 onClick={() => {
                   setMobileQuery('');
                   setMobileCheckin('');
-                  setMobileGuests('');
+                  setAdults(0);
+                  setChildren(0);
                 }}
                 className="text-[13px] font-semibold text-gray-600 hover:text-gray-900 underline py-1 px-2 cursor-pointer"
               >
@@ -347,24 +429,62 @@ export default function Navbar() {
               </div>
 
               {/* Who Card */}
-              <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
-                <label htmlFor="mobile-guests" className="text-xl font-extrabold text-gray-900 block mb-3">
+              <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4">
+                <label className="text-xl font-extrabold text-gray-900 block mb-1">
                   Who&apos;s coming?
                 </label>
-                <div className="border border-gray-300 rounded-xl px-3.5 py-3 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition bg-gray-50/50">
-                  <select 
-                    id="mobile-guests" 
-                    name="guests"
-                    value={mobileGuests}
-                    onChange={(e) => setMobileGuests(e.target.value)}
-                    className="w-full bg-transparent text-[15px] text-gray-900 cursor-pointer outline-none font-medium"
-                  >
-                    <option value="">Add guests</option>
-                    <option value="1">1 guest</option>
-                    <option value="2">2 guests</option>
-                    <option value="3">3 guests</option>
-                    <option value="4+">4+ guests</option>
-                  </select>
+                <input type="hidden" name="guests" value={totalGuests > 0 ? `${totalGuests} guest${totalGuests > 1 ? 's' : ''}` : ''} />
+                
+                {/* Adults row */}
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <div className="flex flex-col">
+                    <span className="text-[16px] font-bold text-gray-900">Adults</span>
+                    <span className="text-[13px] text-gray-500">Ages 13 or above</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setAdults(Math.max(0, adults - 1))}
+                      disabled={adults === 0}
+                      className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed text-lg font-bold bg-white cursor-pointer shadow-xs active:scale-90"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center font-black text-gray-900 text-lg">{adults}</span>
+                    <button
+                      type="button"
+                      onClick={() => setAdults(adults + 1)}
+                      className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all text-lg font-bold bg-white cursor-pointer shadow-xs active:scale-90"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Children row */}
+                <div className="flex items-center justify-between py-2">
+                  <div className="flex flex-col">
+                    <span className="text-[16px] font-bold text-gray-900">Children</span>
+                    <span className="text-[13px] text-gray-500">Ages 2–12</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setChildren(Math.max(0, children - 1))}
+                      disabled={children === 0}
+                      className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed text-lg font-bold bg-white cursor-pointer shadow-xs active:scale-90"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center font-black text-gray-900 text-lg">{children}</span>
+                    <button
+                      type="button"
+                      onClick={() => setChildren(children + 1)}
+                      className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all text-lg font-bold bg-white cursor-pointer shadow-xs active:scale-90"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
 

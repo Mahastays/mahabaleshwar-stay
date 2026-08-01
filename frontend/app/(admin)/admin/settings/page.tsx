@@ -7,7 +7,6 @@ export default function AdminSettingsPage() {
   const [platformName, setPlatformName] = useState('Maha Stay');
   const [supportEmail, setSupportEmail] = useState('support@mahastay.com');
   const [vendorCommission, setVendorCommission] = useState('15');
-  const [guestServiceFee, setGuestServiceFee] = useState('5');
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
@@ -16,7 +15,6 @@ export default function AdminSettingsPage() {
       platformName,
       supportEmail,
       vendorCommission,
-      guestServiceFee,
       updatedAt: new Date().toISOString(),
     };
     localStorage.setItem('adminSettings', JSON.stringify(settings));
@@ -34,7 +32,6 @@ export default function AdminSettingsPage() {
           setPlatformName(parsed.platformName || 'Maha Stay');
           setSupportEmail(parsed.supportEmail || 'support@mahastay.com');
           setVendorCommission(parsed.vendorCommission || '15');
-          setGuestServiceFee(parsed.guestServiceFee || '5');
         } catch { /* ignore parse errors */ }
       }
     }
@@ -94,15 +91,6 @@ export default function AdminSettingsPage() {
                 type="number" 
                 value={vendorCommission}
                 onChange={(e) => setVendorCommission(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all" 
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Guest Service Fee (%)</label>
-              <input 
-                type="number" 
-                value={guestServiceFee}
-                onChange={(e) => setGuestServiceFee(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all" 
               />
             </div>

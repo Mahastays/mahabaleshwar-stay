@@ -17,7 +17,7 @@ import {
   Users 
 } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
@@ -40,6 +40,19 @@ export default function ActivitiesSection() {
 
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' });
+    }
+  };
 
   // Admin Modal State
   const [adminModalOpen, setAdminModalOpen] = useState(false);
@@ -292,21 +305,25 @@ export default function ActivitiesSection() {
                 <Plus size={18} /> Add Activity (Admin)
               </button>
             )}
-            <div className="hidden md:flex gap-2">
-              <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition text-gray-500 hover:text-gray-900 cursor-pointer">
-                <ChevronLeft size={20} />
+            <div className="flex gap-2">
+              <button onClick={scrollLeft} aria-label="Scroll left" className="p-2.5 rounded-full border border-gray-300 hover:border-gray-900 hover:bg-gray-50 active:scale-90 transition text-gray-700 hover:text-gray-900 cursor-pointer shadow-2xs">
+                <ChevronLeft size={20} strokeWidth={2.5} />
               </button>
-              <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition text-gray-500 hover:text-gray-900 cursor-pointer">
-                <ChevronRight size={20} />
+              <button onClick={scrollRight} aria-label="Scroll right" className="p-2.5 rounded-full border border-gray-300 hover:border-gray-900 hover:bg-gray-50 active:scale-90 transition text-gray-700 hover:text-gray-900 cursor-pointer shadow-2xs">
+                <ChevronRight size={20} strokeWidth={2.5} />
               </button>
             </div>
           </div>
         </div>
         
-        {/* Activity Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Activity Horizontal Scroll Container */}
+        <div 
+          ref={scrollContainerRef} 
+          className="flex overflow-x-auto gap-6 pb-4 pt-2 scrollbar-none snap-x snap-mandatory scroll-smooth"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           {activities.map((activity) => (
-            <div key={activity._id} className="group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-all duration-300 relative">
+            <div key={activity._id} className="group flex flex-col bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-gray-300 transition-all duration-300 relative w-[320px] sm:w-[350px] md:w-[380px] shrink-0 snap-start">
               
               {/* Admin Overlay Controls (ONLY visible to Admin) */}
               {user?.role === 'admin' && (

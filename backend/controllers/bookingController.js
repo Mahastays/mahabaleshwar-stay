@@ -44,8 +44,6 @@ const createBooking = async (req, res) => {
       return res.status(409).json({ message: 'Concurrent booking detected. Please try again.' });
     }
 
-    const cleaningFee = 0;
-    const serviceFee = 0;
     const subtotal = propertyObj.price * nights;
     const calculatedTotal = subtotal;
 
@@ -57,8 +55,6 @@ const createBooking = async (req, res) => {
       guests,
       totalPrice: calculatedTotal,
       subtotal,
-      cleaningFee,
-      serviceFee,
     });
 
     const createdBooking = await booking.save();
