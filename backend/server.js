@@ -5,7 +5,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 
 // Route imports
@@ -49,12 +48,8 @@ app.use(express.json({
   },
 })); 
 
-// 5. Data sanitization against NoSQL query injection
-// express-mongo-sanitize is incompatible with Express 5 (req.query is read-only).
-// app.use(mongoSanitize());
-
-// 6. Data sanitization against XSS
-// Express 5 makes req.query read-only, so xss-clean breaks. We rely on React's built-in XSS protection on the frontend.
+// 5. Data sanitization against XSS
+// Express 5 makes req.query read-only, so xss-clean and mongoSanitize break. We rely on React's built-in XSS protection on the frontend.
 
 // 7. Routes
 app.use('/api/properties', propertyRoutes);

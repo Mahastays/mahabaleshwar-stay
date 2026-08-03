@@ -1,10 +1,11 @@
 // @desc    Property Detail Page - Fetches real data from API
 import Link from 'next/link';
-import Image from 'next/image';
-import { Star, MapPin, Share, Heart, ChevronLeft } from 'lucide-react';
+import { Star, MapPin, ChevronLeft } from 'lucide-react';
 import PropertyMapWrapper from '@/components/PropertyMapWrapper';
 import BookingWidget from '@/components/BookingWidget';
 import ReviewSection from '@/components/ReviewSection';
+import PropertyActions from '@/components/PropertyActions';
+import PropertyGallery from '@/components/PropertyGallery';
 
 interface PropertyDetail {
   _id: string;
@@ -64,13 +65,16 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
   }
 
   const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace('/api', '');
-  const galleryImages = property.images.length > 0
-    ? [...property.images.map(img => img.startsWith('/') ? `${baseUrl}${img}` : img), ...fallbackImages].slice(0, 5)
-    : fallbackImages;
+  const mappedImages = (property.images && property.images.length > 0)
+    ? property.images.map(img => img.startsWith('/') ? `${baseUrl}${img}` : img)
+    : [];
+  const galleryImages = mappedImages.length >= 5 
+    ? mappedImages 
+    : [...mappedImages, ...fallbackImages.slice(0, Math.max(0, 5 - mappedImages.length))];
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Breadcrumbs */}
+      {/* Breadcrumbs & Header Actions */}
       <div className="mb-6">
         <Link href="/" className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 mb-4 transition-colors">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to all properties
@@ -81,28 +85,12 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
             <span className="flex items-center gap-1"><Star className="w-4 h-4 fill-current text-gray-900" /> {property.rating.toFixed(2)} ({property.reviews} reviews)</span>
             <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {property.location}</span>
           </div>
-          <div className="flex items-center gap-4 text-sm font-medium">
-            <button className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors cursor-pointer">
-              <Share className="w-4 h-4" /> Share
-            </button>
-            <button className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition-colors cursor-pointer">
-              <Heart className="w-4 h-4" /> Save
-            </button>
-          </div>
+          <PropertyActions propertyId={propId} title={property.title} />
         </div>
       </div>
 
-      {/* Image Gallery Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden mb-12 h-[50vh] md:h-[60vh]">
-        <div className="md:col-span-2 md:row-span-2 relative w-full h-full">
-          <Image src={galleryImages[0]} alt="Main View" fill className="object-cover hover:scale-105 transition-transform duration-500 cursor-pointer" />
-        </div>
-        {galleryImages.slice(1, 5).map((img, idx) => (
-          <div key={idx} className="relative w-full h-full hidden md:block">
-            <Image src={img} alt={`View ${idx + 2}`} fill className="object-cover hover:scale-105 transition-transform duration-500 cursor-pointer" />
-          </div>
-        ))}
-      </div>
+      {/* Interactive Photo Gallery & Lightbox Modal */}
+      <PropertyGallery images={galleryImages} title={property.title} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 relative">
         {/* Main Content */}
