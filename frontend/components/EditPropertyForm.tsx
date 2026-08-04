@@ -123,7 +123,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
-        router.push("/vendor/vendor");
+        router.push("/vendor/properties");
       }, 2000);
     } catch (error) {
       console.error(error);
@@ -296,7 +296,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
           </button>
           <button
             type="button"
-            onClick={() => router.push('/vendor/vendor')}
+            onClick={() => router.push('/vendor/properties')}
             className="px-8 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors shadow-sm"
           >
             Cancel

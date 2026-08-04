@@ -82,26 +82,26 @@ export default function Navbar() {
           {/* Toggles / Center Area */}
           <div className="hidden md:flex flex-1 items-center justify-center space-x-6 relative">
             {/* Links with Icons (Unscrolled State) */}
-            <div className={`flex items-center space-x-8 lg:space-x-12 transition-all duration-300 ${isScrolled ? 'opacity-0 scale-95 pointer-events-none absolute' : 'opacity-100 scale-100 relative'}`}>
-               <Link href="/" className={`flex flex-col items-center justify-center space-y-1.5 cursor-pointer group transition-all duration-200 ${pathname === '/' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
-                 <div className="relative flex items-center justify-center">
-                   <img src="/icon_homes.png" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-115 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Homes" />
+            <div className={`flex items-center space-x-6 lg:space-x-10 transition-all duration-300 ${isScrolled ? 'opacity-0 scale-95 pointer-events-none absolute' : 'opacity-100 scale-100 relative'}`}>
+               <Link href="/" className={`flex items-center gap-3 cursor-pointer group transition-all duration-200 py-1.5 px-3 rounded-2xl hover:bg-gray-50/80 ${pathname === '/' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <div className="relative flex items-center justify-center flex-shrink-0">
+                   <img src="/icon_homes.png?v=2" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:scale-110 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/' ? 'scale-110 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Homes" />
                  </div>
-                 <span className={`text-[14px] lg:text-[15px] transition-all duration-200 ${pathname === '/' ? 'border-b-[3px] border-gray-900 pb-1 font-bold' : 'group-hover:text-gray-900 font-medium'}`}>Homes</span>
+                 <span className={`text-[15px] lg:text-[16px] whitespace-nowrap transition-all duration-200 ${pathname === '/' ? 'border-b-[3px] border-gray-900 pb-0.5 font-extrabold text-gray-900' : 'group-hover:text-gray-900 font-semibold'}`}>Homes</span>
                </Link>
-               <Link href="/explore" className={`flex flex-col items-center justify-center space-y-1.5 cursor-pointer group transition-all duration-200 ${pathname === '/explore' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
-                 <div className="relative flex items-center justify-center">
-                   <img src="/icon_explore.png" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-115 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/explore' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Explore" />
+               <Link href="/explore" className={`flex items-center gap-3 cursor-pointer group transition-all duration-200 py-1.5 px-3 rounded-2xl hover:bg-gray-50/80 ${pathname === '/explore' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <div className="relative flex items-center justify-center flex-shrink-0">
+                   <img src="/icon_explore.png?v=2" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:scale-110 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/explore' ? 'scale-110 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Explore" />
                  </div>
-                 <span className={`text-[14px] lg:text-[15px] transition-all duration-200 ${pathname === '/explore' ? 'border-b-[3px] border-gray-900 pb-1 font-bold' : 'group-hover:text-gray-900 font-medium'}`}>Explore</span>
+                 <span className={`text-[15px] lg:text-[16px] whitespace-nowrap transition-all duration-200 ${pathname === '/explore' ? 'border-b-[3px] border-gray-900 pb-0.5 font-extrabold text-gray-900' : 'group-hover:text-gray-900 font-semibold'}`}>Explore</span>
                </Link>
-               <Link href="/experiences" className={`flex flex-col items-center justify-center space-y-1.5 cursor-pointer group transition-all duration-200 ${pathname === '/experiences' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
-                 <div className="relative flex items-center justify-center">
-                   <img src="/icon_experiences.png" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-115 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/experiences' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Experiences" />
+               <Link href="/experiences" className={`flex items-center gap-3 cursor-pointer group transition-all duration-200 py-1.5 px-3 rounded-2xl hover:bg-gray-50/80 ${pathname === '/experiences' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <div className="relative flex items-center justify-center flex-shrink-0">
+                   <img src="/icon_experiences.png?v=2" className={`w-11 h-11 lg:w-12 lg:h-12 object-contain transition-all duration-300 transform group-hover:scale-110 drop-shadow-sm group-hover:drop-shadow-md ${pathname === '/experiences' ? 'scale-110 drop-shadow-md opacity-100' : 'opacity-85 group-hover:opacity-100'}`} alt="Experiences" />
                  </div>
-                 <span className={`text-[14px] lg:text-[15px] transition-all duration-200 ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-1 font-bold' : 'group-hover:text-gray-900 font-medium'}`}>Experiences</span>
+                 <span className={`text-[15px] lg:text-[16px] whitespace-nowrap transition-all duration-200 ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-0.5 font-extrabold text-gray-900' : 'group-hover:text-gray-900 font-semibold'}`}>Experiences</span>
                </Link>
-            </div>
+             </div>
 
             {/* Compact Search Pill (Scrolled State) */}
             <div className={`flex items-center bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer pl-4 pr-2 py-2 w-[350px] ${isScrolled ? 'opacity-100 scale-100 relative' : 'opacity-0 scale-95 pointer-events-none absolute'}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
@@ -154,15 +154,15 @@ export default function Navbar() {
               <div className="absolute right-0 top-14 bg-white border border-gray-200 rounded-xl shadow-xl w-56 py-2 z-50">
                 <div className="md:hidden border-b border-gray-100 mb-1 pb-1">
                   <Link href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
-                    <img src="/icon_homes.png" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Homes" />
+                    <img src="/icon_homes.png?v=2" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Homes" />
                     <span className="text-[15px]">Homes</span>
                   </Link>
                   <Link href="/explore" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
-                    <img src="/icon_explore.png" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Explore" />
+                    <img src="/icon_explore.png?v=2" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Explore" />
                     <span className="text-[15px]">Explore</span>
                   </Link>
                   <Link href="/experiences" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
-                    <img src="/icon_experiences.png" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Experiences" />
+                    <img src="/icon_experiences.png?v=2" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Experiences" />
                     <span className="text-[15px]">Experiences</span>
                   </Link>
                 </div>
@@ -333,18 +333,18 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Interactive Category Icons (Unscrolled State) */}
-          <div className="md:hidden flex justify-around items-center pt-2 pb-3 px-2 border-b border-gray-100 mb-3">
-            <Link href="/" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition-all duration-200 group px-3 py-1.5 rounded-2xl active:scale-95 ${pathname === '/' ? 'text-gray-900 font-extrabold bg-gray-50/80' : 'text-gray-500 hover:text-gray-900'}`}>
-              <img src="/icon_homes.png" className={`w-11 h-11 object-contain transition-all duration-300 transform drop-shadow-sm ${pathname === '/' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Homes" />
-              <span className={`text-[13px] tracking-tight ${pathname === '/' ? 'border-b-[3px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Homes</span>
+          <div className="md:hidden flex justify-around items-center gap-1.5 pt-2 pb-3 px-2 border-b border-gray-100 mb-3 overflow-x-auto">
+            <Link href="/" className={`flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 group px-3 py-2 rounded-2xl flex-shrink-0 active:scale-95 ${pathname === '/' ? 'text-gray-900 font-extrabold bg-gray-50/80 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}>
+              <img src="/icon_homes.png?v=2" className={`w-9 h-9 object-contain transition-all duration-300 transform drop-shadow-sm flex-shrink-0 ${pathname === '/' ? 'scale-105 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Homes" />
+              <span className={`text-[13px] tracking-tight whitespace-nowrap ${pathname === '/' ? 'border-b-[2px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Homes</span>
             </Link>
-            <Link href="/explore" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition-all duration-200 group px-3 py-1.5 rounded-2xl active:scale-95 ${pathname === '/explore' ? 'text-gray-900 font-extrabold bg-gray-50/80' : 'text-gray-500 hover:text-gray-900'}`}>
-              <img src="/icon_explore.png" className={`w-11 h-11 object-contain transition-all duration-300 transform drop-shadow-sm ${pathname === '/explore' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Explore" />
-              <span className={`text-[13px] tracking-tight ${pathname === '/explore' ? 'border-b-[3px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Explore</span>
+            <Link href="/explore" className={`flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 group px-3 py-2 rounded-2xl flex-shrink-0 active:scale-95 ${pathname === '/explore' ? 'text-gray-900 font-extrabold bg-gray-50/80 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}>
+              <img src="/icon_explore.png?v=2" className={`w-9 h-9 object-contain transition-all duration-300 transform drop-shadow-sm flex-shrink-0 ${pathname === '/explore' ? 'scale-105 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Explore" />
+              <span className={`text-[13px] tracking-tight whitespace-nowrap ${pathname === '/explore' ? 'border-b-[2px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Explore</span>
             </Link>
-            <Link href="/experiences" className={`flex flex-col items-center justify-center space-y-1 cursor-pointer transition-all duration-200 group px-3 py-1.5 rounded-2xl active:scale-95 ${pathname === '/experiences' ? 'text-gray-900 font-extrabold bg-gray-50/80' : 'text-gray-500 hover:text-gray-900'}`}>
-              <img src="/icon_experiences.png" className={`w-11 h-11 object-contain transition-all duration-300 transform drop-shadow-sm ${pathname === '/experiences' ? 'scale-110 -translate-y-0.5 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Experiences" />
-              <span className={`text-[13px] tracking-tight ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Experiences</span>
+            <Link href="/experiences" className={`flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 group px-3 py-2 rounded-2xl flex-shrink-0 active:scale-95 ${pathname === '/experiences' ? 'text-gray-900 font-extrabold bg-gray-50/80 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}>
+              <img src="/icon_experiences.png?v=2" className={`w-9 h-9 object-contain transition-all duration-300 transform drop-shadow-sm flex-shrink-0 ${pathname === '/experiences' ? 'scale-105 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Experiences" />
+              <span className={`text-[13px] tracking-tight whitespace-nowrap ${pathname === '/experiences' ? 'border-b-[2px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Experiences</span>
             </Link>
           </div>
 
