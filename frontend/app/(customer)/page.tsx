@@ -224,8 +224,8 @@ export default async function Home({
       </div>
 
       <ActivitiesSection />
-      <WhyChooseUs />
       <BlogSection />
+      <WhyChooseUs />
       <SupportSection />
     </main>
   );

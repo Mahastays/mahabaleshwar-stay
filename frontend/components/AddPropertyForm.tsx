@@ -10,7 +10,7 @@ export default function AddPropertyForm() {
     title: "",
     description: "",
     price: "",
-    type: "Villas",
+    type: "Hotel",
     location: "",
     amenities: "",
     lat: "",
@@ -92,7 +92,7 @@ export default function AddPropertyForm() {
         title: "",
         description: "",
         price: "",
-        type: "Villas",
+        type: "Hotel",
         location: "",
         amenities: "",
         lat: "",
@@ -152,12 +152,9 @@ export default function AddPropertyForm() {
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-brown focus:border-transparent outline-none transition-all bg-white"
             >
-              <option value="Villas">Villas</option>
-              <option value="Heritage">Heritage</option>
-              <option value="Valley View">Valley View</option>
-              <option value="Near Venna Lake">Near Venna Lake</option>
-              <option value="Forest Stays">Forest Stays</option>
-              <option value="Pools">Pools</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Villa">Villa</option>
+              <option value="Resort">Resort</option>
             </select>
           </div>
 

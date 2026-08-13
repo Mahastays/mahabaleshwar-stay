@@ -31,7 +31,8 @@ const propertySchema = mongoose.Schema(
     },
     type: {
       type: String,
-      required: [true, 'Please add a property type (e.g., Resort, Homestay)'],
+      enum: ['Hotel', 'Villa', 'Resort'],
+      required: [true, 'Please add a property type (e.g., Hotel, Villa, Resort)'],
       index: true,
     },
     location: {

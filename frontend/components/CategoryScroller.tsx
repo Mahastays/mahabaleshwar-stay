@@ -1,16 +1,13 @@
 "use client";
 
-import { Home, Castle, MountainSnow, Waves, TreePine, Droplet, LayoutGrid } from 'lucide-react';
+import { Home, Building2, Palmtree, LayoutGrid } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const categories = [
   { name: 'All', icon: LayoutGrid },
-  { name: 'Villas', icon: Home },
-  { name: 'Heritage', icon: Castle },
-  { name: 'Valley View', icon: MountainSnow },
-  { name: 'Near Venna Lake', icon: Waves },
-  { name: 'Forest Stays', icon: TreePine },
-  { name: 'Pools', icon: Droplet },
+  { name: 'Hotel', icon: Building2 },
+  { name: 'Villa', icon: Home },
+  { name: 'Resort', icon: Palmtree },
 ];
 
 export default function CategoryScroller({ activeCategory = 'All' }: { activeCategory?: string }) {

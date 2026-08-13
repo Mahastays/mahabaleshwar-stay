@@ -101,6 +101,12 @@ export default function Navbar() {
                  </div>
                  <span className={`text-[15px] lg:text-[16px] whitespace-nowrap transition-all duration-200 ${pathname === '/experiences' ? 'border-b-[3px] border-gray-900 pb-0.5 font-extrabold text-gray-900' : 'group-hover:text-gray-900 font-semibold'}`}>Experiences</span>
                </Link>
+               <Link href="/best-packages" className={`flex items-center gap-3 cursor-pointer group transition-all duration-200 py-1.5 px-3 rounded-2xl hover:bg-gray-50/80 ${pathname === '/best-packages' ? 'text-gray-900 font-bold' : 'text-gray-500 hover:text-gray-900'}`}>
+                 <div className="relative flex items-center justify-center flex-shrink-0 w-11 h-11 lg:w-12 lg:h-12 bg-gradient-to-br from-rose-100 to-rose-200 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.8),inset_0px_-2px_4px_rgba(225,29,72,0.2),0px_4px_8px_rgba(225,29,72,0.15)] text-brand-red rounded-full transition-all duration-300 transform group-hover:scale-110 group-hover:shadow-[inset_0px_2px_4px_rgba(255,255,255,0.8),inset_0px_-2px_4px_rgba(225,29,72,0.2),0px_6px_12px_rgba(225,29,72,0.25)] group-hover:-translate-y-0.5">
+                   <Luggage size={24} className="drop-shadow-sm" />
+                 </div>
+                 <span className={`text-[15px] lg:text-[16px] whitespace-nowrap transition-all duration-200 ${pathname === '/best-packages' ? 'border-b-[3px] border-gray-900 pb-0.5 font-extrabold text-gray-900' : 'group-hover:text-gray-900 font-semibold'}`}>Packages</span>
+               </Link>
              </div>
 
             {/* Compact Search Pill (Scrolled State) */}
@@ -164,6 +170,12 @@ export default function Navbar() {
                   <Link href="/experiences" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
                     <img src="/icon_experiences.png?v=2" className="w-8 h-8 object-contain transition-transform transform group-hover:scale-110 drop-shadow-sm" alt="Experiences" />
                     <span className="text-[15px]">Experiences</span>
+                  </Link>
+                  <Link href="/best-packages" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all group">
+                    <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-br from-rose-100 to-rose-200 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.8),inset_0px_-2px_4px_rgba(225,29,72,0.2),0px_4px_8px_rgba(225,29,72,0.15)] text-brand-red rounded-full transition-transform transform group-hover:scale-110">
+                      <Luggage size={16} className="drop-shadow-sm" />
+                    </div>
+                    <span className="text-[15px]">Packages</span>
                   </Link>
                 </div>
                 {user ? (
@@ -345,6 +357,12 @@ export default function Navbar() {
             <Link href="/experiences" className={`flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 group px-3 py-2 rounded-2xl flex-shrink-0 active:scale-95 ${pathname === '/experiences' ? 'text-gray-900 font-extrabold bg-gray-50/80 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}>
               <img src="/icon_experiences.png?v=2" className={`w-9 h-9 object-contain transition-all duration-300 transform drop-shadow-sm flex-shrink-0 ${pathname === '/experiences' ? 'scale-105 drop-shadow-md opacity-100' : 'opacity-85 hover:scale-105'}`} alt="Experiences" />
               <span className={`text-[13px] tracking-tight whitespace-nowrap ${pathname === '/experiences' ? 'border-b-[2px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Experiences</span>
+            </Link>
+            <Link href="/best-packages" className={`flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 group px-3 py-2 rounded-2xl flex-shrink-0 active:scale-95 ${pathname === '/best-packages' ? 'text-gray-900 font-extrabold bg-gray-50/80 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}>
+              <div className={`w-9 h-9 flex items-center justify-center bg-gradient-to-br from-rose-100 to-rose-200 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.8),inset_0px_-2px_4px_rgba(225,29,72,0.2),0px_4px_8px_rgba(225,29,72,0.15)] text-brand-red rounded-full transition-all duration-300 transform flex-shrink-0 ${pathname === '/best-packages' ? 'scale-105 shadow-[inset_0px_2px_4px_rgba(255,255,255,0.8),inset_0px_-2px_4px_rgba(225,29,72,0.2),0px_6px_12px_rgba(225,29,72,0.25)]' : 'hover:scale-105 hover:shadow-[inset_0px_2px_4px_rgba(255,255,255,0.8),inset_0px_-2px_4px_rgba(225,29,72,0.2),0px_6px_12px_rgba(225,29,72,0.25)]'}`}>
+                <Luggage size={18} className="drop-shadow-sm" />
+              </div>
+              <span className={`text-[13px] tracking-tight whitespace-nowrap ${pathname === '/best-packages' ? 'border-b-[2px] border-gray-900 pb-0.5 font-bold' : 'font-medium'}`}>Packages</span>
             </Link>
           </div>
 

@@ -19,6 +19,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const experienceRoutes = require('./routes/experienceRoutes');
 const vendorRoutes = require('./routes/vendorRoutes');
 const storyRoutes = require('./routes/storyRoutes');
+const packageRoutes = require('./routes/packageRoutes');
 
 connectDB();
 const app = express();
@@ -63,6 +64,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/experiences', experienceRoutes);
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/stories', storyRoutes);
+app.use('/api/packages', packageRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 

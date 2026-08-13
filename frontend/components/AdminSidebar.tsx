@@ -82,6 +82,10 @@ export default function AdminSidebar() {
           <MapPin className="w-5 h-5" />
           <span className="font-medium text-sm">Experiences</span>
         </Link>
+        <Link href="/admin/packages" className={getLinkClasses('/admin/packages')}>
+          <MapPin className="w-5 h-5" />
+          <span className="font-medium text-sm">Packages</span>
+        </Link>
         <Link href="/admin/settings" className={getLinkClasses('/admin/settings')}>
           <Settings className="w-5 h-5" />
           <span className="font-medium text-sm">Platform Settings</span>
