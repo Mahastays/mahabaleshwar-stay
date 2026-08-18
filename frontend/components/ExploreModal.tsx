@@ -118,7 +118,7 @@ export default function ExploreModal({ isOpen, onClose, place, onSuccess }: Expl
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        <form id="explore-form" onSubmit={handleSubmit} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
           {error && (
             <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg">
               {error}
@@ -246,7 +246,8 @@ export default function ExploreModal({ isOpen, onClose, place, onSuccess }: Expl
               Cancel
             </button>
             <button
-              onClick={handleSubmit}
+              type="submit"
+              form="explore-form"
               disabled={loading}
               className="px-5 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center gap-2"
             >

@@ -43,8 +43,10 @@ const createExplorePlace = async (req, res) => {
       entryFee, distance, isFeatured,
     } = req.body;
 
+    const placeSlug = slug || (name ? name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : '');
+
     const place = new Explore({
-      name, slug, tagline, description, history,
+      name, slug: placeSlug, tagline, description, history,
       images, bestTime, thingsToDo, category,
       entryFee, distance, isFeatured,
     });
@@ -52,7 +54,7 @@ const createExplorePlace = async (req, res) => {
     const createdPlace = await place.save();
     res.status(201).json(createdPlace);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: error.message || 'Invalid data', error: error.message });
   }
 };
 
@@ -81,7 +83,7 @@ const updateExplorePlace = async (req, res) => {
     const updated = await place.save();
     res.json(updated);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: error.message || 'Invalid data', error: error.message });
   }
 };
 
