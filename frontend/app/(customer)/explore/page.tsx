@@ -23,7 +23,11 @@ interface ExplorePlace {
 
 async function fetchPlaces(): Promise<ExplorePlace[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/explore`, { next: { revalidate: 60 } });
+    let serverApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    if (typeof window === 'undefined' && serverApiUrl.startsWith('/')) {
+      serverApiUrl = process.env.BACKEND_URL || process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+    }
+    const res = await fetch(`${serverApiUrl}/explore`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     return await res.json();
   } catch (error) {

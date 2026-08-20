@@ -7,7 +7,7 @@ async function fetchPackageDetails(id: string) {
     let serverApiUrl = apiUrl;
     if (typeof window === 'undefined') {
       if (serverApiUrl.startsWith('/')) {
-        serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+        serverApiUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
       }
       if (serverApiUrl.includes('localhost')) {
         serverApiUrl = serverApiUrl.replace('localhost', '127.0.0.1');

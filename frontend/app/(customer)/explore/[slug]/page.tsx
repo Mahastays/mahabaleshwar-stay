@@ -35,7 +35,7 @@ async function fetchPlace(slug: string): Promise<ExplorePlace | null> {
   try {
     let serverApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
     if (typeof window === 'undefined' && serverApiUrl.startsWith('/')) {
-      serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+      serverApiUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
     }
     const res = await fetch(`${serverApiUrl}/explore/${slug}`, {
       next: { revalidate: 60 },
@@ -51,7 +51,7 @@ async function fetchNearbyProperties(): Promise<Property[]> {
   try {
     let serverApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
     if (typeof window === 'undefined' && serverApiUrl.startsWith('/')) {
-      serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+      serverApiUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
     }
     const res = await fetch(`${serverApiUrl}/properties`, {
       next: { revalidate: 60 },

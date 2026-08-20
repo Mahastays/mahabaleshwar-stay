@@ -25,7 +25,7 @@ async function fetchProperty(id: string): Promise<PropertyDetail | null> {
   try {
     let serverApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
     if (typeof window === 'undefined' && serverApiUrl.startsWith('/')) {
-      serverApiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
+      serverApiUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000/api';
     }
     const res = await fetch(`${serverApiUrl}/properties/${id}`, { next: { revalidate: 60 } });
     if (!res.ok) return null;
