@@ -60,7 +60,7 @@ const createBooking = async (req, res) => {
     const createdBooking = await booking.save();
     res.status(201).json(createdBooking);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid booking data', error: error.message });
+    res.status(400).json({ message: 'Invalid booking data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -72,7 +72,7 @@ const getMyBookings = async (req, res) => {
     const bookings = await Booking.find({ user: req.user._id }).populate('property', 'title images location');
     res.json(bookings);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -92,7 +92,7 @@ const getHostBookings = async (req, res) => {
       
     res.json(bookings);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -117,7 +117,7 @@ const updateBookingStatus = async (req, res) => {
       res.status(404).json({ message: 'Booking not found' });
     }
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 

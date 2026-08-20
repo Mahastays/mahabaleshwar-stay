@@ -8,7 +8,7 @@ const getProperties = async (req, res) => {
     const properties = await Property.find({ status: 'approved' });
     res.json(properties);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -20,7 +20,7 @@ const getProviderProperties = async (req, res) => {
     const properties = await Property.find({ host: req.user._id });
     res.json(properties);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -32,7 +32,7 @@ const getAllPropertiesAdmin = async (req, res) => {
     const properties = await Property.find({}).populate('host', 'name email');
     res.json(properties);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -49,7 +49,7 @@ const getPropertyById = async (req, res) => {
       res.status(404).json({ message: 'Property not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -87,7 +87,7 @@ const createProperty = async (req, res) => {
     const createdProperty = await property.save();
     res.status(201).json(createdProperty);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid property data', error: error.message });
+    res.status(400).json({ message: 'Invalid property data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -128,7 +128,7 @@ const updateProperty = async (req, res) => {
       res.status(404).json({ message: 'Property not found' });
     }
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -149,7 +149,7 @@ const updatePropertyStatus = async (req, res) => {
       res.status(404).json({ message: 'Property not found' });
     }
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -168,7 +168,7 @@ const togglePropertyFeatured = async (req, res) => {
       res.status(404).json({ message: 'Property not found' });
     }
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -191,7 +191,7 @@ const deleteProperty = async (req, res) => {
       res.status(404).json({ message: 'Property not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 

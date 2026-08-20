@@ -39,7 +39,7 @@ const getStories = async (req, res) => {
     const stories = await Story.find().sort({ createdAt: -1 });
     res.json(stories);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -60,7 +60,7 @@ const createStory = async (req, res) => {
     const createdStory = await story.save();
     res.status(201).json(createdStory);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -84,7 +84,7 @@ const updateStory = async (req, res) => {
     const updatedStory = await story.save();
     res.json(updatedStory);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -100,7 +100,7 @@ const deleteStory = async (req, res) => {
     await story.deleteOne();
     res.json({ message: 'Story removed completely' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 

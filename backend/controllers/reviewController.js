@@ -12,7 +12,7 @@ const getPropertyReviews = async (req, res) => {
 
     res.json(reviews);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -51,7 +51,7 @@ const createReview = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({ message: 'You have already posted a rating and review for this property.' });
     }
-    res.status(400).json({ message: 'Failed to submit review', error: error.message });
+    res.status(400).json({ message: 'Failed to submit review', error: error.message || error.errmsg || error });
   }
 };
 
@@ -75,7 +75,7 @@ const deleteReview = async (req, res) => {
 
     res.json({ message: 'Review removed' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -97,7 +97,7 @@ const checkCanReview = async (req, res) => {
 
     res.json({ canReview: true });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 

@@ -8,7 +8,7 @@ const getExplorePlaces = async (req, res) => {
     const places = await Explore.find({}).sort({ isFeatured: -1, name: 1 });
     res.json(places);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -28,7 +28,7 @@ const getExplorePlace = async (req, res) => {
     }
     res.json(place);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -54,7 +54,11 @@ const createExplorePlace = async (req, res) => {
     const createdPlace = await place.save();
     res.status(201).json(createdPlace);
   } catch (error) {
-    res.status(400).json({ message: error.message || 'Invalid data', error: error.message });
+    console.error("Explore Creation Error:", error);
+    res.status(400).json({ 
+      message: error.message || error.errmsg || JSON.stringify(error) || 'Invalid data', 
+      error: error.message || error.errmsg || error 
+    });
   }
 };
 
@@ -83,7 +87,7 @@ const updateExplorePlace = async (req, res) => {
     const updated = await place.save();
     res.json(updated);
   } catch (error) {
-    res.status(400).json({ message: error.message || 'Invalid data', error: error.message });
+    res.status(400).json({ message: error.message || error.errmsg || JSON.stringify(error) || 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -99,7 +103,7 @@ const deleteExplorePlace = async (req, res) => {
     await Explore.deleteOne({ _id: place._id });
     res.json({ message: 'Place removed' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 

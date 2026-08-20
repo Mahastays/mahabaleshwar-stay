@@ -8,7 +8,7 @@ const getExperiences = async (req, res) => {
     const experiences = await Experience.find({ status: 'approved' }).sort({ createdAt: -1 });
     res.json(experiences);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -20,7 +20,7 @@ const getAllExperiencesAdmin = async (req, res) => {
     const experiences = await Experience.find({}).sort({ createdAt: -1 }).populate('user', 'name email');
     res.json(experiences);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -44,7 +44,7 @@ const createExperience = async (req, res) => {
     const createdExperience = await experience.save();
     res.status(201).json(createdExperience);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -65,7 +65,7 @@ const updateExperienceStatus = async (req, res) => {
 
     res.json(updatedExperience);
   } catch (error) {
-    res.status(400).json({ message: 'Error updating status', error: error.message });
+    res.status(400).json({ message: 'Error updating status', error: error.message || error.errmsg || error });
   }
 };
 
@@ -89,7 +89,7 @@ const updateExperience = async (req, res) => {
     const updated = await experience.save();
     res.json(updated);
   } catch (error) {
-    res.status(400).json({ message: 'Invalid data', error: error.message });
+    res.status(400).json({ message: 'Invalid data', error: error.message || error.errmsg || error });
   }
 };
 
@@ -105,7 +105,7 @@ const deleteExperience = async (req, res) => {
     await Experience.deleteOne({ _id: experience._id });
     res.json({ message: 'Experience removed' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 

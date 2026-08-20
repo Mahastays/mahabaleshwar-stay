@@ -112,7 +112,7 @@ const getAllUsers = async (req, res) => {
     const users = await User.find({}).select('-firebaseUid');
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -140,7 +140,7 @@ const adminUpdateUserRole = async (req, res) => {
       role: updatedUser.role,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 
@@ -159,7 +159,7 @@ const adminDeleteUser = async (req, res) => {
     await User.deleteOne({ _id: user._id });
     res.json({ message: 'User removed' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Server Error', error: error.message || error.errmsg || error });
   }
 };
 

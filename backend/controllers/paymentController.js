@@ -58,7 +58,7 @@ const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error('Razorpay order creation error:', error);
-    res.status(500).json({ message: 'Payment initialization failed', error: error.message });
+    res.status(500).json({ message: 'Payment initialization failed', error: error.message || error.errmsg || error });
   }
 };
 
@@ -282,7 +282,7 @@ const createActivityOrder = async (req, res) => {
     }
   } catch (error) {
     console.error('Activity payment order error:', error);
-    res.status(500).json({ message: 'Failed to initialize activity payment', error: error.message });
+    res.status(500).json({ message: 'Failed to initialize activity payment', error: error.message || error.errmsg || error });
   }
 };
 
