@@ -6,7 +6,7 @@ const Property = require('../models/propertyModel');
 // @access  Private
 const createBooking = async (req, res) => {
   try {
-    const { property, checkInDate, checkOutDate, guests } = req.body;
+    const { property, checkInDate, checkOutDate, guests, roomName } = req.body;
 
     if (!property || !checkInDate || !checkOutDate || !guests) {
       return res.status(400).json({ message: 'Please provide all required fields' });
@@ -21,17 +21,40 @@ const createBooking = async (req, res) => {
     const end = new Date(checkOutDate);
     const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
 
-    // Check for overlapping bookings
-    const overlapping = await Booking.findOne({
-      property: property,
-      status: { $ne: 'cancelled' },
-      $or: [
-        { checkInDate: { $lt: end }, checkOutDate: { $gt: start } }
-      ]
-    });
+    let pricePerNight = propertyObj.price;
 
-    if (overlapping) {
-      return res.status(400).json({ message: 'Property is already booked for these dates' });
+    if (roomName && propertyObj.rooms && propertyObj.rooms.length > 0) {
+      const room = propertyObj.rooms.find(r => r.name === roomName);
+      if (!room) {
+        return res.status(400).json({ message: 'Selected room not found in property' });
+      }
+      pricePerNight = room.price;
+      
+      const overlappingCount = await Booking.countDocuments({
+        property: property,
+        roomName: roomName,
+        status: { $ne: 'cancelled' },
+        $or: [
+          { checkInDate: { $lt: end }, checkOutDate: { $gt: start } }
+        ]
+      });
+
+      if (overlappingCount >= room.quantity) {
+        return res.status(400).json({ message: 'Selected room is fully booked for these dates' });
+      }
+    } else {
+      // Check for overlapping bookings for single-entity properties (e.g. Villas)
+      const overlapping = await Booking.findOne({
+        property: property,
+        status: { $ne: 'cancelled' },
+        $or: [
+          { checkInDate: { $lt: end }, checkOutDate: { $gt: start } }
+        ]
+      });
+
+      if (overlapping) {
+        return res.status(400).json({ message: 'Property is already booked for these dates' });
+      }
     }
 
     // Acquire Optimistic Lock on the Property document
@@ -44,7 +67,7 @@ const createBooking = async (req, res) => {
       return res.status(409).json({ message: 'Concurrent booking detected. Please try again.' });
     }
 
-    const subtotal = propertyObj.price * nights;
+    const subtotal = pricePerNight * nights;
     const calculatedTotal = subtotal;
 
     const booking = new Booking({
@@ -53,6 +76,7 @@ const createBooking = async (req, res) => {
       checkInDate,
       checkOutDate,
       guests,
+      roomName,
       totalPrice: calculatedTotal,
       subtotal,
     });

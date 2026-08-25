@@ -19,6 +19,7 @@ interface PropertyDetail {
   type: string;
   location: string;
   coordinates?: { lat: number; lng: number };
+  rooms?: { name: string; price: number; quantity: number }[];
 }
 
 async function fetchProperty(id: string): Promise<PropertyDetail | null> {
@@ -140,7 +141,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
         {/* Booking Widget Sidebar */}
         <div className="lg:col-span-1 border-t lg:border-t-0 pt-8 lg:pt-0">
-          <BookingWidget propertyId={propId} pricePerNight={property.price} />
+          <BookingWidget propertyId={propId} pricePerNight={property.price} rooms={property.rooms} />
         </div>
       </div>
     </main>

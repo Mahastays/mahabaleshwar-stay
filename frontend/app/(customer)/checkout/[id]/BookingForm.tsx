@@ -11,13 +11,15 @@ export default function BookingForm({
   propertyId,
   checkin,
   checkout,
-  guests
+  guests,
+  roomName
 }: { 
   totalAmount: number, 
   propertyId: string,
   checkin: string,
   checkout: string,
-  guests: string
+  guests: string,
+  roomName?: string
 }) {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState('');
@@ -67,7 +69,8 @@ export default function BookingForm({
         propertyId, 
         checkInDate: checkin, 
         checkOutDate: checkout, 
-        guests 
+        guests,
+        roomName
       });
       const { orderId, amount, currency, keyId } = orderRes.data;
 
@@ -90,6 +93,7 @@ export default function BookingForm({
               checkInDate: checkin,
               checkOutDate: checkout,
               guests,
+              roomName,
               totalPrice: totalAmount,
             });
 

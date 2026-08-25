@@ -35,6 +35,11 @@ const propertySchema = mongoose.Schema(
       required: [true, 'Please add a property type (e.g., Hotel, Villa, Resort)'],
       index: true,
     },
+    rooms: [{
+      name: { type: String, required: true },
+      price: { type: Number, required: true },
+      quantity: { type: Number, required: true, min: 1 }
+    }],
     location: {
       type: String,
       required: [true, 'Please add a location'],

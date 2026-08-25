@@ -6,9 +6,10 @@ import Link from 'next/link';
 interface BookingWidgetProps {
   propertyId: string;
   pricePerNight: number;
+  rooms?: { name: string; price: number; quantity: number }[];
 }
 
-export default function BookingWidget({ propertyId, pricePerNight }: BookingWidgetProps) {
+export default function BookingWidget({ propertyId, pricePerNight, rooms = [] }: BookingWidgetProps) {
   // Set default dates: checkin today, checkout tomorrow (1 night)
   const today = new Date();
   const tomorrow = new Date(today);
@@ -24,6 +25,18 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
   const [children, setChildren] = useState(0);
   const [guestDropdownOpen, setGuestDropdownOpen] = useState(false);
   const guestDropdownRef = useRef<HTMLDivElement>(null);
+
+  const [selectedRoom, setSelectedRoom] = useState(rooms.length > 0 ? rooms[0].name : '');
+  const [currentPrice, setCurrentPrice] = useState(rooms.length > 0 ? rooms[0].price : pricePerNight);
+
+  useEffect(() => {
+    if (selectedRoom && rooms.length > 0) {
+      const room = rooms.find(r => r.name === selectedRoom);
+      if (room) {
+        setCurrentPrice(room.price);
+      }
+    }
+  }, [selectedRoom, rooms]);
 
   useEffect(() => {
     const totalGuests = adults + children;
@@ -65,20 +78,40 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
     }
   }, [checkin, checkout]);
 
-  const subtotal = pricePerNight * nights;
+  const subtotal = currentPrice * nights;
   const total = subtotal;
 
   // URL parameters for passing data to checkout
-  const checkoutUrl = `/checkout/${propertyId}?checkin=${checkin}&checkout=${checkout}&guests=${encodeURIComponent(guests)}&price=${pricePerNight}`;
+  const checkoutUrl = `/checkout/${propertyId}?checkin=${checkin}&checkout=${checkout}&guests=${encodeURIComponent(guests)}&price=${currentPrice}${selectedRoom ? `&roomName=${encodeURIComponent(selectedRoom)}` : ''}`;
 
   return (
     <div className="sticky top-24 bg-white border border-gray-200 rounded-2xl p-6 shadow-xl shadow-gray-200/50">
       <div className="flex items-end justify-between mb-6">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-gray-900">₹{pricePerNight.toLocaleString()}</span>
+          <span className="text-2xl font-bold text-gray-900">₹{currentPrice.toLocaleString()}</span>
           <span className="text-gray-600">/ night</span>
         </div>
       </div>
+
+      {rooms && rooms.length > 0 && (
+        <div className="mb-4">
+          <label className="text-xs font-bold uppercase tracking-wider text-gray-900 mb-1.5 block">Select Room Type</label>
+          <div className="relative">
+            <select 
+              value={selectedRoom}
+              onChange={(e) => setSelectedRoom(e.target.value)}
+              className="w-full appearance-none bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 cursor-pointer shadow-sm transition-all"
+            >
+              {rooms.map((r, idx) => (
+                <option key={idx} value={r.name}>{r.name} - ₹{r.price}/night</option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="border border-gray-300 rounded-xl mb-4">
         <div className="flex border-b border-gray-300">
@@ -206,7 +239,7 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
         <>
           <div className="space-y-3 pb-6 border-b border-gray-200">
             <div className="flex justify-between text-gray-600">
-              <span className="underline cursor-pointer">₹{pricePerNight.toLocaleString()} x {nights} {nights === 1 ? 'night' : 'nights'}</span>
+              <span className="underline cursor-pointer">₹{currentPrice.toLocaleString()} x {nights} {nights === 1 ? 'night' : 'nights'}</span>
               <span>₹{subtotal.toLocaleString()}</span>
             </div>
           </div>

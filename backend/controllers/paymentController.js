@@ -15,7 +15,7 @@ const razorpay = new Razorpay({
 // @route   POST /api/payment/create-order
 // @access  Private
 const createOrder = async (req, res) => {
-  const { propertyId, checkInDate, checkOutDate, guests } = req.body;
+  const { propertyId, checkInDate, checkOutDate, guests, roomName } = req.body;
 
   if (!propertyId || !checkInDate || !checkOutDate) {
     return res.status(400).json({ message: 'Invalid booking details' });
@@ -31,7 +31,15 @@ const createOrder = async (req, res) => {
     const diffTime = Math.abs(end - start);
     const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
 
-    const subtotal = property.price * nights;
+    let pricePerNight = property.price;
+    if (roomName && property.rooms && property.rooms.length > 0) {
+      const room = property.rooms.find(r => r.name === roomName);
+      if (room) {
+        pricePerNight = room.price;
+      }
+    }
+
+    const subtotal = pricePerNight * nights;
     const calculatedTotal = subtotal;
 
     const options = {
@@ -44,7 +52,8 @@ const createOrder = async (req, res) => {
         propertyId: propertyId.toString(),
         checkInDate: new Date(checkInDate).toISOString(),
         checkOutDate: new Date(checkOutDate).toISOString(),
-        guests: guests ? guests.toString() : '1'
+        guests: guests ? guests.toString() : '1',
+        roomName: roomName || ''
       },
     };
 
@@ -73,7 +82,8 @@ const verifyPaymentAndBook = async (req, res) => {
     propertyId,
     checkInDate,
     checkOutDate,
-    guests
+    guests,
+    roomName
   } = req.body;
 
   const body = razorpay_order_id + '|' + razorpay_payment_id;
@@ -109,7 +119,16 @@ const verifyPaymentAndBook = async (req, res) => {
         const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
         
         const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
-        const subtotal = property.price * nights;
+        
+        let pricePerNight = property.price;
+        if (roomName && property.rooms && property.rooms.length > 0) {
+          const room = property.rooms.find(r => r.name === roomName);
+          if (room) {
+            pricePerNight = room.price;
+          }
+        }
+        
+        const subtotal = pricePerNight * nights;
         const calculatedTotal = subtotal;
 
         const newBooking = new Booking({
@@ -118,6 +137,7 @@ const verifyPaymentAndBook = async (req, res) => {
           checkInDate,
           checkOutDate,
           guests: parseInt(guests) || 1,
+          roomName,
           totalPrice: calculatedTotal,
           subtotal,
           platformCommission: subtotal * vendorCommissionRate,
@@ -192,7 +212,16 @@ const handleWebhook = async (req, res) => {
               const nights = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1;
               
               const vendorCommissionRate = parseFloat(process.env.VENDOR_COMMISSION_RATE || '0.15');
-              const subtotal = property.price * nights;
+              
+              let pricePerNight = property.price;
+              if (notes.roomName && property.rooms && property.rooms.length > 0) {
+                const room = property.rooms.find(r => r.name === notes.roomName);
+                if (room) {
+                  pricePerNight = room.price;
+                }
+              }
+              
+              const subtotal = pricePerNight * nights;
               
               const newBooking = new Booking({
                 user: notes.user,
@@ -200,6 +229,7 @@ const handleWebhook = async (req, res) => {
                 checkInDate: notes.checkInDate,
                 checkOutDate: notes.checkOutDate,
                 guests: parseInt(notes.guests) || 1,
+                roomName: notes.roomName,
                 totalPrice: (paymentData.amount / 100),
                 subtotal,
                 platformCommission: subtotal * vendorCommissionRate,

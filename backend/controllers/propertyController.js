@@ -58,7 +58,7 @@ const getPropertyById = async (req, res) => {
 // @access  Private/Admin/Vendor
 const createProperty = async (req, res) => {
   try {
-    const { title, description, price, images, amenities, type, location } = req.body;
+    const { title, description, price, images, amenities, type, location, rooms } = req.body;
 
     const propertyObj = {
       title,
@@ -68,6 +68,7 @@ const createProperty = async (req, res) => {
       amenities,
       type,
       location,
+      rooms: rooms || [],
       host: req.user._id,
       status: 'approved',
     };
@@ -96,7 +97,7 @@ const createProperty = async (req, res) => {
 // @access  Private/Admin/Vendor
 const updateProperty = async (req, res) => {
   try {
-    const { title, description, price, images, amenities, type, location } = req.body;
+    const { title, description, price, images, amenities, type, location, rooms } = req.body;
 
     const property = await Property.findById(req.params.id);
 
@@ -113,6 +114,10 @@ const updateProperty = async (req, res) => {
       property.amenities = amenities || property.amenities;
       property.type = type || property.type;
       property.location = location || property.location;
+      
+      if (rooms) {
+        property.rooms = rooms;
+      }
       
       if (req.body.coordinates && req.body.coordinates.lat && req.body.coordinates.lng) {
         property.coordinates = req.body.coordinates;

@@ -20,6 +20,7 @@ export default function AddPropertyForm() {
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [rooms, setRooms] = useState([{ name: "", price: "", quantity: "" }]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,6 +84,9 @@ export default function AddPropertyForm() {
           lat: Number(formData.lat),
           lng: Number(formData.lng)
         } : undefined,
+        rooms: (formData.type === 'Hotel' || formData.type === 'Resort') 
+          ? rooms.map(r => ({ name: r.name, price: Number(r.price), quantity: Number(r.quantity) }))
+          : [],
       };
       const res = await api.post("/properties", propertyData);
 
@@ -99,6 +103,7 @@ export default function AddPropertyForm() {
         lng: "",
       });
       setImages([]);
+      setRooms([{ name: "", price: "", quantity: "" }]);
 
       setTimeout(() => setSuccess(false), 3000);
     } catch (error: any) {
@@ -132,7 +137,7 @@ export default function AddPropertyForm() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Price per Night (₹)</label>
+            <label className="text-sm font-medium text-gray-700">{formData.type === 'Hotel' || formData.type === 'Resort' ? 'Base Price / Starting Price (₹)' : 'Price per Night (₹)'}</label>
             <input
               type="number"
               name="price"
@@ -205,6 +210,61 @@ export default function AddPropertyForm() {
             />
           </div>
         </div>
+
+        {(formData.type === 'Hotel' || formData.type === 'Resort') && (
+          <div className="space-y-4 p-5 border border-gray-200 rounded-xl bg-gray-50/50">
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-bold text-gray-900">Room Types & Inventory</label>
+              <button 
+                type="button" 
+                onClick={() => setRooms([...rooms, { name: "", price: "", quantity: "" }])} 
+                className="text-xs font-bold text-brand-red bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition-all active:scale-95"
+              >
+                + Add Room Type
+              </button>
+            </div>
+            {rooms.map((room, idx) => (
+              <div key={idx} className="flex flex-col md:flex-row gap-3">
+                <input 
+                  type="text" 
+                  placeholder="Room Name (e.g. Deluxe Suite)" 
+                  value={room.name} 
+                  onChange={(e) => { const newRooms = [...rooms]; newRooms[idx].name = e.target.value; setRooms(newRooms); }} 
+                  className="flex-[2] px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:ring-1 focus:ring-gray-900" 
+                  required 
+                />
+                <input 
+                  type="number" 
+                  placeholder="Price (₹)" 
+                  value={room.price} 
+                  onChange={(e) => { const newRooms = [...rooms]; newRooms[idx].price = e.target.value; setRooms(newRooms); }} 
+                  className="flex-1 px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:ring-1 focus:ring-gray-900" 
+                  required 
+                />
+                <div className="flex flex-1 gap-2">
+                  <input 
+                    type="number" 
+                    placeholder="Qty (e.g. 5)" 
+                    value={room.quantity} 
+                    onChange={(e) => { const newRooms = [...rooms]; newRooms[idx].quantity = e.target.value; setRooms(newRooms); }} 
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm outline-none focus:ring-1 focus:ring-gray-900" 
+                    required 
+                    min="1" 
+                  />
+                  {rooms.length > 1 && (
+                    <button 
+                      type="button" 
+                      onClick={() => { const newRooms = [...rooms]; newRooms.splice(idx, 1); setRooms(newRooms); }} 
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors font-bold flex-shrink-0"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">Description</label>

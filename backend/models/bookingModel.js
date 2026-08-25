@@ -14,6 +14,10 @@ const bookingSchema = mongoose.Schema(
       ref: 'Property',
       index: true,
     },
+    roomName: {
+      type: String,
+      required: false,
+    },
     checkInDate: {
       type: Date,
       required: [true, 'Please add a check-in date'],

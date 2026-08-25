@@ -34,7 +34,7 @@ export default async function CheckoutPage({
   searchParams
 }: { 
   params: Promise<{ id: string }>,
-  searchParams: Promise<{ checkin?: string; checkout?: string; guests?: string; price?: string }>
+  searchParams: Promise<{ checkin?: string; checkout?: string; guests?: string; price?: string; roomName?: string }>
 }) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
@@ -46,6 +46,7 @@ export default async function CheckoutPage({
   const checkin = resolvedSearchParams.checkin || 'Not selected';
   const checkout = resolvedSearchParams.checkout || 'Not selected';
   const guests = resolvedSearchParams.guests || '1 guest';
+  const roomName = resolvedSearchParams.roomName ? decodeURIComponent(resolvedSearchParams.roomName) : undefined;
 
   let nights = 0;
   if (checkin !== 'Not selected' && checkout !== 'Not selected') {
@@ -106,6 +107,7 @@ export default async function CheckoutPage({
               checkin={checkin}
               checkout={checkout}
               guests={guests}
+              roomName={roomName}
             />
           </section>
         </div>
@@ -129,6 +131,7 @@ export default async function CheckoutPage({
 
             <div className="pt-6">
               <h3 className="text-lg font-bold mb-4">Price details</h3>
+              {roomName && <p className="text-sm font-medium text-gray-900 mb-4 bg-gray-50 p-3 rounded-lg border border-gray-200">Selected Room: {roomName}</p>}
               <div className="space-y-4 text-gray-600">
                 <div className="flex justify-between">
                   <span>₹{priceNum.toLocaleString()} x {nights} {nights === 1 ? 'night' : 'nights'}</span>
