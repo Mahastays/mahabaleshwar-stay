@@ -160,15 +160,23 @@ export default function AddPropertyForm() {
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Location</label>
-            <input
-              type="text"
+            <select
               name="location"
               value={formData.location}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-brown focus:border-transparent outline-none transition-all"
-              placeholder="e.g. Panchgani Road"
-            />
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-brown focus:border-transparent outline-none transition-all bg-white"
+            >
+              <option value="" disabled>Select a location</option>
+              <option value="Main Market Mahableshwar">Main Market Mahableshwar</option>
+              <option value="Venna Lake">Venna Lake</option>
+              <option value="Main Road Satara">Main Road Satara</option>
+              <option value="Panchgani">Panchgani</option>
+              <option value="Bhilar">Bhilar</option>
+              <option value="Bhoise">Bhoise</option>
+              <option value="Lingmala Waterfall">Lingmala Waterfall</option>
+              <option value="Wilson Point">Wilson Point</option>
+            </select>
           </div>
 
           <div className="space-y-2">

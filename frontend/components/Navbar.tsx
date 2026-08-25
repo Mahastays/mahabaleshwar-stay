@@ -246,7 +246,17 @@ export default function Navbar() {
             <form action="/search" className="max-w-[850px] w-full flex flex-col md:flex-row items-center bg-white border border-gray-300 rounded-3xl md:rounded-full shadow-md hover:shadow-lg transition-shadow duration-200 p-2 md:p-2 gap-2 md:gap-0">
               <div className="w-full md:flex-[1.5] flex flex-col px-4 md:px-8 border-b md:border-b-0 md:border-r border-gray-200 md:border-gray-300 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
                 <label htmlFor="query" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">Where</label>
-                <input type="text" id="query" name="query" placeholder="Search destinations" className="text-[14px] text-gray-900 placeholder-gray-500 truncate outline-none bg-transparent w-full" />
+                <select id="query" name="query" defaultValue="" className="text-[14px] text-gray-900 truncate outline-none bg-transparent w-full cursor-pointer">
+                  <option value="" disabled hidden>Search destinations</option>
+                  <option value="Main Market Mahableshwar">Main Market Mahableshwar</option>
+                  <option value="Venna Lake">Venna Lake</option>
+                  <option value="Main Road Satara">Main Road Satara</option>
+                  <option value="Panchgani">Panchgani</option>
+                  <option value="Bhilar">Bhilar</option>
+                  <option value="Bhoise">Bhoise</option>
+                  <option value="Lingmala Waterfall">Lingmala Waterfall</option>
+                  <option value="Wilson Point">Wilson Point</option>
+                </select>
               </div>
               <div className="w-full md:flex-1 flex flex-col px-4 md:px-8 border-b md:border-b-0 md:border-r border-gray-200 md:border-gray-300 hover:bg-gray-100 rounded-2xl md:rounded-full cursor-pointer transition py-2 md:py-1">
                 <label htmlFor="checkin" className="text-[12px] font-extrabold text-gray-900 tracking-wide cursor-pointer">When</label>
@@ -416,15 +426,23 @@ export default function Navbar() {
                 </label>
                 <div className="flex items-center border border-gray-300 rounded-xl px-3.5 py-3 focus-within:border-gray-900 focus-within:ring-1 focus-within:ring-gray-900 transition bg-gray-50/50">
                   <Search size={20} className="text-gray-500 mr-3 flex-shrink-0" />
-                  <input 
-                    type="text" 
+                  <select 
                     id="mobile-query" 
                     name="query"
                     value={mobileQuery}
                     onChange={(e) => setMobileQuery(e.target.value)}
-                    placeholder="Search destinations (e.g. Mahabaleshwar, Panchgani)" 
-                    className="w-full bg-transparent text-[15px] text-gray-900 placeholder-gray-500 font-medium outline-none"
-                  />
+                    className="w-full bg-transparent text-[15px] text-gray-900 font-medium outline-none cursor-pointer"
+                  >
+                    <option value="" disabled>Search destinations</option>
+                    <option value="Main Market Mahableshwar">Main Market Mahableshwar</option>
+                    <option value="Venna Lake">Venna Lake</option>
+                    <option value="Main Road Satara">Main Road Satara</option>
+                    <option value="Panchgani">Panchgani</option>
+                    <option value="Bhilar">Bhilar</option>
+                    <option value="Bhoise">Bhoise</option>
+                    <option value="Lingmala Waterfall">Lingmala Waterfall</option>
+                    <option value="Wilson Point">Wilson Point</option>
+                  </select>
                 </div>
               </div>
 
