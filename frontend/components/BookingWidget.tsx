@@ -80,9 +80,9 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
         </div>
       </div>
 
-      <div className="border border-gray-300 rounded-xl overflow-hidden mb-4">
+      <div className="border border-gray-300 rounded-xl mb-4">
         <div className="flex border-b border-gray-300">
-          <div className="w-1/2 p-3 border-r border-gray-300 hover:bg-gray-50 cursor-pointer transition-colors relative">
+          <div className="w-1/2 p-3 border-r border-gray-300 hover:bg-gray-50 cursor-pointer transition-colors relative rounded-tl-xl">
             <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900">Check-in</label>
             <input 
               type="date" 
@@ -92,7 +92,7 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
               min={formatDate(new Date())}
             />
           </div>
-          <div className="w-1/2 p-3 hover:bg-gray-50 cursor-pointer transition-colors relative">
+          <div className="w-1/2 p-3 hover:bg-gray-50 cursor-pointer transition-colors relative rounded-tr-xl">
             <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900">Checkout</label>
             <input 
               type="date" 
@@ -104,13 +104,18 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
           </div>
         </div>
         <div 
-          className="p-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
+          className="p-3 hover:bg-gray-50 cursor-pointer transition-colors relative rounded-b-xl"
           ref={guestDropdownRef}
         >
-          <div onClick={() => setGuestDropdownOpen(!guestDropdownOpen)} className="w-full h-full">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900 cursor-pointer">Guests</label>
-            <div className="w-full text-sm mt-1 font-medium text-gray-800">
-              {guests}
+          <div onClick={() => setGuestDropdownOpen(!guestDropdownOpen)} className="w-full h-full flex items-center justify-between">
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900 cursor-pointer">Guests</label>
+              <div className="w-full text-sm mt-1 font-medium text-gray-800">
+                {guests}
+              </div>
+            </div>
+            <div className="text-gray-500 mr-2 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </div>
           </div>
           
