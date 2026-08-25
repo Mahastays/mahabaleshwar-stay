@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 interface BookingWidgetProps {
@@ -20,6 +20,25 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
   const [checkout, setCheckout] = useState(formatDate(tomorrow));
   const [guests, setGuests] = useState('1 guest');
   const [nights, setNights] = useState(1);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [guestDropdownOpen, setGuestDropdownOpen] = useState(false);
+  const guestDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const totalGuests = adults + children;
+    setGuests(`${totalGuests} guest${totalGuests > 1 ? 's' : ''}`);
+  }, [adults, children]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (guestDropdownRef.current && !guestDropdownRef.current.contains(event.target as Node)) {
+        setGuestDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Automatically adjust checkout date if user picks a checkin date that is after or equal to checkout
   const handleCheckinChange = (newCheckin: string) => {
@@ -84,20 +103,85 @@ export default function BookingWidget({ propertyId, pricePerNight }: BookingWidg
             />
           </div>
         </div>
-        <div className="p-3 hover:bg-gray-50 cursor-pointer transition-colors">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900">Guests</label>
-          <select 
-            className="w-full text-sm outline-none bg-transparent mt-1 cursor-pointer font-medium text-gray-800"
-            value={guests}
-            onChange={(e) => setGuests(e.target.value)}
-          >
-            <option value="1 guest">1 guest</option>
-            <option value="2 guests">2 guests</option>
-            <option value="3 guests">3 guests</option>
-            <option value="4 guests">4 guests</option>
-            <option value="5 guests">5 guests</option>
-            <option value="6 guests">6 guests</option>
-          </select>
+        <div 
+          className="p-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
+          ref={guestDropdownRef}
+        >
+          <div onClick={() => setGuestDropdownOpen(!guestDropdownOpen)} className="w-full h-full">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-gray-900 cursor-pointer">Guests</label>
+            <div className="w-full text-sm mt-1 font-medium text-gray-800">
+              {guests}
+            </div>
+          </div>
+          
+          {guestDropdownOpen && (
+            <div 
+              onClick={(e) => e.stopPropagation()} 
+              className="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.14)] p-6 w-[320px] z-50 animate-in fade-in zoom-in-95 duration-150 cursor-default"
+            >
+              {/* Adults */}
+              <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-bold text-gray-900">Adults</span>
+                  <span className="text-[12px] text-gray-500">Ages 13 or above</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setAdults(Math.max(1, adults - 1))}
+                    disabled={adults <= 1}
+                    className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold bg-white cursor-pointer shadow-sm"
+                  >
+                    -
+                  </button>
+                  <span className="w-5 text-center font-bold text-gray-900 text-base">{adults}</span>
+                  <button
+                    type="button"
+                    onClick={() => setAdults(adults + 1)}
+                    className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all text-base font-bold bg-white cursor-pointer shadow-sm"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Children */}
+              <div className="flex items-center justify-between py-3">
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-bold text-gray-900">Children</span>
+                  <span className="text-[12px] text-gray-500">Ages 2–12</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setChildren(Math.max(0, children - 1))}
+                    disabled={children === 0}
+                    className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all disabled:opacity-30 disabled:cursor-not-allowed text-base font-bold bg-white cursor-pointer shadow-sm"
+                  >
+                    -
+                  </button>
+                  <span className="w-5 text-center font-bold text-gray-900 text-base">{children}</span>
+                  <button
+                    type="button"
+                    onClick={() => setChildren(children + 1)}
+                    className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:border-gray-900 transition-all text-base font-bold bg-white cursor-pointer shadow-sm"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-end">
+                <button 
+                  type="button"
+                  onClick={() => setGuestDropdownOpen(false)}
+                  className="text-[13px] font-bold text-gray-900 hover:text-brand-red underline transition-colors px-2 py-1 cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
