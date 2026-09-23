@@ -22,7 +22,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [rooms, setRooms] = useState([{ name: "", price: "", quantity: "" }]);
+  const [rooms, setRooms] = useState([{ name: "", price: "", quantity: "", image: "", breakfastIncluded: false }]);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -42,7 +42,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
         });
         setImages(data.images || []);
         if (data.rooms && data.rooms.length > 0) {
-          setRooms(data.rooms.map((r: any) => ({ name: r.name, price: r.price.toString(), quantity: r.quantity.toString() })));
+          setRooms(data.rooms.map((r: any) => ({ name: r.name, price: r.price.toString(), quantity: r.quantity.toString(), image: r.image || "", breakfastIncluded: r.breakfastIncluded || false })));
         }
       } catch (error) {
         console.error(error);
@@ -97,7 +97,36 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
       alert(`Error uploading image: ${error.message || 'Unknown error'}`);
     }
   };
+  const uploadRoomImageHandler = async (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
+    setUploading(true);
+
+    try {
+      const res = await api.get('/upload/url', {
+        params: { filename: file.name, contentType: file.type }
+      });
+      const { uploadUrl, publicUrl } = res.data;
+
+      const uploadRes = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      });
+
+      if (!uploadRes.ok) throw new Error('Failed to upload image');
+
+      const newRooms = [...rooms];
+      newRooms[idx].image = publicUrl;
+      setRooms(newRooms);
+      setUploading(false);
+    } catch (error: any) {
+      console.error(error);
+      setUploading(false);
+      alert(`Error uploading room image: ${error.message || 'Unknown error'}`);
+    }
+  };
   const removeImage = (indexToRemove: number) => {
     setImages(images.filter((_, idx) => idx !== indexToRemove));
   };
@@ -121,7 +150,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
           lng: Number(formData.lng)
         } : undefined,
         rooms: (formData.type === 'Hotel' || formData.type === 'Resort') 
-          ? rooms.map(r => ({ name: r.name, price: Number(r.price), quantity: Number(r.quantity) }))
+          ? rooms.map(r => ({ name: r.name, price: Number(r.price), quantity: Number(r.quantity), image: r.image, breakfastIncluded: r.breakfastIncluded }))
           : [],
       };
 
@@ -245,7 +274,7 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
               <label className="text-sm font-bold text-gray-900">Room Types & Inventory</label>
               <button 
                 type="button" 
-                onClick={() => setRooms([...rooms, { name: "", price: "", quantity: "" }])} 
+                onClick={() => setRooms([...rooms, { name: "", price: "", quantity: "", image: "", breakfastIncluded: false }])} 
                 className="text-xs font-bold text-brand-red bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition-all active:scale-95"
               >
                 + Add Room Type
@@ -288,6 +317,27 @@ export default function EditPropertyForm({ propertyId }: { propertyId: string })
                       ×
                     </button>
                   )}
+                </div>
+                <div className="flex flex-[1.5] items-center gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm hover:bg-gray-100 transition-colors w-full justify-center">
+                    <ImageIcon className="w-4 h-4 text-gray-500" />
+                    <span className="text-gray-600 truncate max-w-[100px]">{room.image ? "Change" : "Upload Image"}</span>
+                    <input type="file" className="hidden" accept="image/*" onChange={(e) => uploadRoomImageHandler(e, idx)} />
+                  </label>
+                  {room.image && (
+                    <div className="w-10 h-10 rounded overflow-hidden border border-gray-200 flex-shrink-0">
+                      <img src={room.image.startsWith('/') && !room.image.startsWith('http') ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'}${room.image}` : room.image} alt="Room" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 px-2">
+                  <input
+                    type="checkbox"
+                    checked={room.breakfastIncluded}
+                    onChange={(e) => { const newRooms = [...rooms]; newRooms[idx].breakfastIncluded = e.target.checked; setRooms(newRooms); }}
+                    className="w-4 h-4 text-brand-red border-gray-300 rounded focus:ring-brand-red"
+                  />
+                  <span className="text-xs text-gray-700">Breakfast</span>
                 </div>
               </div>
             ))}

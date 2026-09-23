@@ -58,7 +58,7 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
   return (
     <>
       {/* Photo Grid on Property Details Page */}
-      <div className="relative grid grid-cols-1 md:grid-cols-4 gap-2.5 rounded-3xl overflow-hidden mb-12 h-[45vh] md:h-[60vh] shadow-xl shadow-gray-900/5 bg-gray-100 group">
+      <div className="relative grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-2.5 rounded-3xl overflow-hidden mb-12 h-[45vh] md:h-[60vh] shadow-xl shadow-gray-900/5 bg-gray-100 group">
         {/* Main large left photo */}
         <div 
           onClick={() => openGallery(0)}
@@ -68,24 +68,24 @@ export default function PropertyGallery({ images, title }: PropertyGalleryProps)
             src={images[0]} 
             alt={`${title} main view`} 
             fill 
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 768px) 100vw, 66vw"
             className="object-cover hover:scale-[1.03] transition-transform duration-500 ease-out" 
           />
           <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />
         </div>
 
-        {/* Up to 4 secondary photos on desktop */}
-        {images.slice(1, 5).map((img, idx) => (
+        {/* Up to 2 secondary photos on desktop stacked on the right */}
+        {images.slice(1, 3).map((img, idx) => (
           <div 
             key={idx} 
             onClick={() => openGallery(idx + 1)}
-            className="relative w-full h-full hidden md:block overflow-hidden cursor-pointer bg-gray-200"
+            className="relative w-full h-full hidden md:block overflow-hidden cursor-pointer bg-gray-200 md:col-span-1 md:row-span-1"
           >
             <Image 
               src={img} 
               alt={`${title} view ${idx + 2}`} 
               fill 
-              sizes="25vw"
+              sizes="33vw"
               className="object-cover hover:scale-[1.05] transition-transform duration-500 ease-out" 
             />
             <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300" />

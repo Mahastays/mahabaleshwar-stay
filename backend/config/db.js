@@ -10,8 +10,10 @@ const connectDB = async () => {
     const conn = await mongoose.connect(process.env.MONGO_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.log(`MongoDB Connection Error (Check IP Whitelist!): ${error.message}`);
-    process.exit(1);
+    console.error(`MongoDB Connection Error (Check IP Whitelist & ENV!): ${error.message}`);
+    console.error(`Make sure MONGO_URI is set in your environment variables.`);
+    // We remove process.exit(1) so Beanstalk doesn't mark the instance as "Degraded" 
+    // before the user has a chance to configure environment variables.
   }
 };
 

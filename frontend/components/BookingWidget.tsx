@@ -7,9 +7,11 @@ interface BookingWidgetProps {
   propertyId: string;
   pricePerNight: number;
   rooms?: { name: string; price: number; quantity: number }[];
+  externalSelectedRoom?: string;
+  onExternalRoomChange?: (name: string) => void;
 }
 
-export default function BookingWidget({ propertyId, pricePerNight, rooms = [] }: BookingWidgetProps) {
+export default function BookingWidget({ propertyId, pricePerNight, rooms = [], externalSelectedRoom, onExternalRoomChange }: BookingWidgetProps) {
   // Set default dates: checkin today, checkout tomorrow (1 night)
   const today = new Date();
   const tomorrow = new Date(today);
@@ -26,7 +28,17 @@ export default function BookingWidget({ propertyId, pricePerNight, rooms = [] }:
   const [guestDropdownOpen, setGuestDropdownOpen] = useState(false);
   const guestDropdownRef = useRef<HTMLDivElement>(null);
 
-  const [selectedRoom, setSelectedRoom] = useState(rooms.length > 0 ? rooms[0].name : '');
+  const [internalSelectedRoom, setInternalSelectedRoom] = useState(rooms.length > 0 ? rooms[0].name : '');
+  const selectedRoom = externalSelectedRoom !== undefined ? externalSelectedRoom : internalSelectedRoom;
+
+  const handleRoomChange = (name: string) => {
+    if (onExternalRoomChange) {
+      onExternalRoomChange(name);
+    } else {
+      setInternalSelectedRoom(name);
+    }
+  };
+
   const [currentPrice, setCurrentPrice] = useState(rooms.length > 0 ? rooms[0].price : pricePerNight);
 
   useEffect(() => {
@@ -99,7 +111,7 @@ export default function BookingWidget({ propertyId, pricePerNight, rooms = [] }:
           <div className="relative">
             <select 
               value={selectedRoom}
-              onChange={(e) => setSelectedRoom(e.target.value)}
+              onChange={(e) => handleRoomChange(e.target.value)}
               className="w-full appearance-none bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 cursor-pointer shadow-sm transition-all"
             >
               {rooms.map((r, idx) => (

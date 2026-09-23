@@ -6,6 +6,7 @@ import BookingWidget from '@/components/BookingWidget';
 import ReviewSection from '@/components/ReviewSection';
 import PropertyActions from '@/components/PropertyActions';
 import PropertyGallery from '@/components/PropertyGallery';
+import PropertyBookingLayout from '@/components/PropertyBookingLayout';
 
 interface PropertyDetail {
   _id: string;
@@ -93,57 +94,48 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
       {/* Interactive Photo Gallery & Lightbox Modal */}
       <PropertyGallery images={galleryImages} title={property.title} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 relative">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-10">
-          <div className="flex items-center justify-between border-b pb-8">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">{property.type} in {property.location}</h2>
-              <p className="text-gray-600">Hosted on Mahastays</p>
+      <PropertyBookingLayout 
+        propertyId={propId} 
+        pricePerNight={property.price} 
+        rooms={property.rooms} 
+        rating={property.rating} 
+        reviews={property.reviews}
+      >
+        <div className="flex items-center justify-between border-b pb-8">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">{property.type} in {property.location}</h2>
+            <p className="text-gray-600">Hosted on Mahastays</p>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold tracking-tight">About this space</h3>
+          <p className="text-gray-600 leading-relaxed">{property.description}</p>
+        </div>
+
+        {property.amenities && property.amenities.length > 0 && (
+          <div className="border-t pt-8">
+            <h3 className="text-xl font-bold tracking-tight mb-6">What this place offers</h3>
+            <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-gray-700">
+              {property.amenities.map((amenity, idx) => (
+                <div key={idx} className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">✓</span>
+                  {amenity}
+                </div>
+              ))}
             </div>
           </div>
+        )}
 
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold tracking-tight">About this space</h3>
-            <p className="text-gray-600 leading-relaxed">{property.description}</p>
-          </div>
-
-          {property.amenities && property.amenities.length > 0 && (
-            <div className="border-t pt-8">
-              <h3 className="text-xl font-bold tracking-tight mb-6">What this place offers</h3>
-              <div className="grid grid-cols-2 gap-y-4 gap-x-8 text-gray-700">
-                {property.amenities.map((amenity, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">✓</span>
-                    {amenity}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="border-t pt-8 pb-8">
-            <h3 className="text-xl font-bold tracking-tight mb-6">Where you'll be</h3>
-            <PropertyMapWrapper 
-              location={property.coordinates || { lat: 17.9237, lng: 73.6538 }} 
-              title={property.title} 
-            />
-            <p className="mt-4 text-sm text-gray-600">{property.location}, Mahabaleshwar, Maharashtra, India</p>
-          </div>
-
-          {/* Reviews Section */}
-          <ReviewSection
-            propertyId={propId}
-            avgRating={property.rating}
-            totalReviews={property.reviews}
+        <div className="border-t pt-8 pb-8">
+          <h3 className="text-xl font-bold tracking-tight mb-6">Where you'll be</h3>
+          <PropertyMapWrapper 
+            location={property.coordinates || { lat: 17.9237, lng: 73.6538 }} 
+            title={property.title} 
           />
+          <p className="mt-4 text-sm text-gray-600">{property.location}, Mahabaleshwar, Maharashtra, India</p>
         </div>
-
-        {/* Booking Widget Sidebar */}
-        <div className="lg:col-span-1 border-t lg:border-t-0 pt-8 lg:pt-0">
-          <BookingWidget propertyId={propId} pricePerNight={property.price} rooms={property.rooms} />
-        </div>
-      </div>
+      </PropertyBookingLayout>
     </main>
   );
 }
