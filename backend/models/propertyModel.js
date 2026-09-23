@@ -38,7 +38,9 @@ const propertySchema = mongoose.Schema(
     rooms: [{
       name: { type: String, required: true },
       price: { type: Number, required: true },
-      quantity: { type: Number, required: true, min: 1 }
+      quantity: { type: Number, required: true, min: 1 },
+      image: { type: String },
+      breakfastIncluded: { type: Boolean, default: false }
     }],
     location: {
       type: String,
