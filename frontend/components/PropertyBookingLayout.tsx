@@ -15,7 +15,19 @@ interface PropertyBookingLayoutProps {
 }
 
 export default function PropertyBookingLayout({ propertyId, pricePerNight, rooms, children, rating, reviews }: PropertyBookingLayoutProps) {
-  const [selectedRoom, setSelectedRoom] = useState(rooms && rooms.length > 0 ? rooms[0].name : '');
+  const [selectedRooms, setSelectedRooms] = useState<string[]>(rooms && rooms.length > 0 ? [rooms[0].name] : []);
+
+  const handleSelectRoom = (name: string) => {
+    setSelectedRooms(prev => {
+      if (prev.includes(name)) {
+        // Prevent deselecting the last room
+        if (prev.length === 1) return prev;
+        return prev.filter(r => r !== name);
+      } else {
+        return [...prev, name];
+      }
+    });
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 relative">
@@ -28,8 +40,8 @@ export default function PropertyBookingLayout({ propertyId, pricePerNight, rooms
           <div className="border-t pt-8 pb-8">
             <RoomSelectionList 
               rooms={rooms} 
-              selectedRoom={selectedRoom} 
-              onSelectRoom={setSelectedRoom} 
+              selectedRooms={selectedRooms} 
+              onSelectRoom={handleSelectRoom} 
             />
           </div>
         )}
@@ -48,8 +60,8 @@ export default function PropertyBookingLayout({ propertyId, pricePerNight, rooms
           propertyId={propertyId} 
           pricePerNight={pricePerNight} 
           rooms={rooms} 
-          externalSelectedRoom={selectedRoom} 
-          onExternalRoomChange={setSelectedRoom} 
+          externalSelectedRooms={selectedRooms} 
+          onExternalRoomChange={handleSelectRoom} 
         />
       </div>
     </div>

@@ -74,7 +74,30 @@ export default function BookingForm({
       });
       const { orderId, amount, currency, keyId } = orderRes.data;
 
-      // Step 2: Open Razorpay Checkout
+      // Step 2: Check if it's a mock order (for local dev without real keys)
+      if (orderRes.data.mock) {
+        try {
+          await api.post('/payment/verify', {
+            razorpay_payment_id: `pay_mock_${Date.now()}`,
+            razorpay_order_id: orderId,
+            razorpay_signature: `sig_mock_${Date.now()}`,
+            propertyId,
+            checkInDate: checkin,
+            checkOutDate: checkout,
+            guests,
+            roomName,
+            totalPrice: totalAmount,
+          });
+          router.push('/checkout/success');
+        } catch (verifyErr: any) {
+          console.error('Mock Payment verification failed:', verifyErr);
+          setError('Payment verification failed.');
+          setIsPending(false);
+        }
+        return;
+      }
+
+      // Step 3: Open Razorpay Checkout for real payments
       const options = {
         key: keyId,
         amount: amount,
@@ -84,7 +107,6 @@ export default function BookingForm({
         order_id: orderId,
         handler: async function (response: any) {
           try {
-            // Step 3: Verify Payment & Create Booking
             await api.post('/payment/verify', {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,

@@ -234,14 +234,41 @@ export default function BlogSection() {
 
               <div>
                 <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Image URL</label>
-                <input 
-                  type="url" 
+                <textarea 
                   required 
+                  rows={2}
                   value={formData.image} 
                   onChange={(e) => setFormData({...formData, image: e.target.value})}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3a1b5c] text-sm font-medium"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3a1b5c] text-sm font-medium resize-none mb-2"
                 />
+                <div className="flex items-center">
+                  <label className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-200 transition">
+                    <span>{saving ? "Uploading..." : "Upload Image"}</span>
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*" 
+                      disabled={saving}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setSaving(true);
+                        try {
+                          const res = await api.get('/upload/url', { params: { filename: file.name, contentType: file.type } });
+                          const { uploadUrl, publicUrl } = res.data;
+                          const uploadRes = await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file });
+                          if (!uploadRes.ok) throw new Error('Failed to upload');
+                          setFormData({ ...formData, image: publicUrl });
+                        } catch (err: any) {
+                          alert(`Error uploading image: ${err.message}`);
+                        } finally {
+                          setSaving(false);
+                        }
+                      }} 
+                    />
+                  </label>
+                </div>
               </div>
 
               <div>

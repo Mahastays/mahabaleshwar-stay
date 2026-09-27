@@ -56,7 +56,7 @@ export default async function ExplorePage() {
       {/* ── Hero ── */}
       <section className="relative h-[60vh] min-h-[480px] flex items-end justify-start overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2000&q=80"
+          src="https://images.unsplash.com/photo-1626082896492-766af4eb65ed?auto=format&fit=crop&w=2000&q=80"
           alt="Mahabaleshwar landscape"
           className="absolute inset-0 w-full h-full object-cover animate-hero-zoom"
         />

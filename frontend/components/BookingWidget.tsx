@@ -7,11 +7,11 @@ interface BookingWidgetProps {
   propertyId: string;
   pricePerNight: number;
   rooms?: { name: string; price: number; quantity: number }[];
-  externalSelectedRoom?: string;
+  externalSelectedRooms?: string[];
   onExternalRoomChange?: (name: string) => void;
 }
 
-export default function BookingWidget({ propertyId, pricePerNight, rooms = [], externalSelectedRoom, onExternalRoomChange }: BookingWidgetProps) {
+export default function BookingWidget({ propertyId, pricePerNight, rooms = [], externalSelectedRooms, onExternalRoomChange }: BookingWidgetProps) {
   // Set default dates: checkin today, checkout tomorrow (1 night)
   const today = new Date();
   const tomorrow = new Date(today);
@@ -28,27 +28,34 @@ export default function BookingWidget({ propertyId, pricePerNight, rooms = [], e
   const [guestDropdownOpen, setGuestDropdownOpen] = useState(false);
   const guestDropdownRef = useRef<HTMLDivElement>(null);
 
-  const [internalSelectedRoom, setInternalSelectedRoom] = useState(rooms.length > 0 ? rooms[0].name : '');
-  const selectedRoom = externalSelectedRoom !== undefined ? externalSelectedRoom : internalSelectedRoom;
+  const [internalSelectedRooms, setInternalSelectedRooms] = useState<string[]>(rooms.length > 0 ? [rooms[0].name] : []);
+  const selectedRooms = externalSelectedRooms !== undefined ? externalSelectedRooms : internalSelectedRooms;
 
   const handleRoomChange = (name: string) => {
     if (onExternalRoomChange) {
       onExternalRoomChange(name);
     } else {
-      setInternalSelectedRoom(name);
+      setInternalSelectedRooms(prev => {
+        if (prev.includes(name)) {
+          if (prev.length === 1) return prev;
+          return prev.filter(r => r !== name);
+        } else {
+          return [...prev, name];
+        }
+      });
     }
   };
 
   const [currentPrice, setCurrentPrice] = useState(rooms.length > 0 ? rooms[0].price : pricePerNight);
 
   useEffect(() => {
-    if (selectedRoom && rooms.length > 0) {
-      const room = rooms.find(r => r.name === selectedRoom);
-      if (room) {
-        setCurrentPrice(room.price);
+    if (selectedRooms && rooms.length > 0) {
+      const selected = rooms.filter(r => selectedRooms.includes(r.name));
+      if (selected.length > 0) {
+        setCurrentPrice(selected.reduce((sum, r) => sum + r.price, 0));
       }
     }
-  }, [selectedRoom, rooms]);
+  }, [selectedRooms, rooms]);
 
   useEffect(() => {
     const totalGuests = adults + children;
@@ -94,7 +101,7 @@ export default function BookingWidget({ propertyId, pricePerNight, rooms = [], e
   const total = subtotal;
 
   // URL parameters for passing data to checkout
-  const checkoutUrl = `/checkout/${propertyId}?checkin=${checkin}&checkout=${checkout}&guests=${encodeURIComponent(guests)}&price=${currentPrice}${selectedRoom ? `&roomName=${encodeURIComponent(selectedRoom)}` : ''}`;
+  const checkoutUrl = `/checkout/${propertyId}?checkin=${checkin}&checkout=${checkout}&guests=${encodeURIComponent(guests)}&price=${currentPrice}${selectedRooms.length > 0 ? `&roomName=${encodeURIComponent(selectedRooms.join(', '))}` : ''}`;
 
   return (
     <div className="sticky top-24 bg-white border border-gray-200 rounded-2xl p-6 shadow-xl shadow-gray-200/50">
@@ -107,20 +114,9 @@ export default function BookingWidget({ propertyId, pricePerNight, rooms = [], e
 
       {rooms && rooms.length > 0 && (
         <div className="mb-4">
-          <label className="text-xs font-bold uppercase tracking-wider text-gray-900 mb-1.5 block">Select Room Type</label>
-          <div className="relative">
-            <select 
-              value={selectedRoom}
-              onChange={(e) => handleRoomChange(e.target.value)}
-              className="w-full appearance-none bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 cursor-pointer shadow-sm transition-all"
-            >
-              {rooms.map((r, idx) => (
-                <option key={idx} value={r.name}>{r.name} - ₹{r.price}/night</option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-            </div>
+          <label className="text-xs font-bold uppercase tracking-wider text-gray-900 mb-1.5 block">Selected Rooms</label>
+          <div className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-700">
+            {selectedRooms.length > 0 ? selectedRooms.join(', ') : 'None selected'}
           </div>
         </div>
       )}

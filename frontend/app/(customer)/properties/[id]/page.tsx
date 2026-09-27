@@ -81,13 +81,19 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
         <Link href="/" className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 mb-4 transition-colors">
           <ChevronLeft className="w-4 h-4 mr-1" /> Back to all properties
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">{property.title}</h1>
-        <div className="flex items-center justify-between mt-2 flex-wrap gap-4">
-          <div className="flex items-center gap-4 text-sm text-gray-600 font-medium">
-            <span className="flex items-center gap-1"><Star className="w-4 h-4 fill-current text-gray-900" /> {property.rating.toFixed(2)} ({property.reviews} reviews)</span>
-            <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {property.location}</span>
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">{property.title}</h1>
+            <div className="flex items-center mt-2 flex-wrap gap-4 text-sm text-gray-600 font-medium">
+              <span className="flex items-center gap-1"><Star className="w-4 h-4 fill-current text-gray-900" /> {property.rating.toFixed(2)} ({property.reviews} reviews)</span>
+              <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {property.location}</span>
+              <PropertyActions propertyId={propId} title={property.title} />
+            </div>
           </div>
-          <PropertyActions propertyId={propId} title={property.title} />
+          <div className="text-right bg-indigo-50 p-4 rounded-xl border border-indigo-100 shadow-sm shrink-0">
+            <h4 className="text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1">Contact with Host</h4>
+            <a href="mailto:host@mahastays.com" className="text-sm font-bold text-indigo-700 hover:text-indigo-900 transition-colors">host@mahastays.com</a>
+          </div>
         </div>
       </div>
 

@@ -182,14 +182,44 @@ export default function ExploreModal({ isOpen, onClose, place, onSuccess }: Expl
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Images (comma separated URLs)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Images</label>
             <textarea
               required
               rows={2}
               value={formData.images}
               onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none resize-none"
+              placeholder="Comma separated URLs"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none resize-none mb-2"
             />
+            <div className="flex items-center gap-4">
+              <label className="cursor-pointer bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-100 transition">
+                <span>{loading ? "Uploading..." : "Upload Image"}</span>
+                <input 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*" 
+                  disabled={loading}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setLoading(true);
+                    try {
+                      const res = await api.get('/upload/url', { params: { filename: file.name, contentType: file.type } });
+                      const { uploadUrl, publicUrl } = res.data;
+                      const uploadRes = await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file });
+                      if (!uploadRes.ok) throw new Error('Failed to upload');
+                      const currentImages = formData.images ? formData.images.split(",").map(s => s.trim()).filter(Boolean) : [];
+                      currentImages.push(publicUrl);
+                      setFormData({ ...formData, images: currentImages.join(", ") });
+                    } catch (err: any) {
+                      alert(`Error uploading image: ${err.message}`);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }} 
+                />
+              </label>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
